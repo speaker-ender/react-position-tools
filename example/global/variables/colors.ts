@@ -21,6 +21,9 @@ export const COLORS = {
     sand: 'rgba(236, 232, 209, 1)',
     sandLight: 'rgba(243, 242, 234, 1)',
     sandDark: 'rgba(175, 171, 145, 1)',
+    gold: 'rgba(252, 194, 3, 1)',
+    goldLight: 'rgba(255, 216, 87, 1)',
+    goldDark: 'rgba(173, 133, 0, 1)'
 };
 
 type ColorsType = typeof COLORS;

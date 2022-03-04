@@ -16,9 +16,7 @@ export interface IWindowDimensions {
     height: number,
 }
 
-const selectWindowDimensions = (
-    prevDimensions?: IWindowDimensions
-): IWindowDimensions | undefined =>
+const selectWindowDimensions = (): IWindowDimensions | undefined =>
     hasWindow
         ? {
             width: windowWidth(),
@@ -60,9 +58,7 @@ export const useWindowState = () => {
     const throttledSetWindowDimensions = throttle(LISTENER_INTERVAL, setWindowDimensions);
 
     const handleResizeEvent = useEventCallback(() => {
-        const newWindowDimensions = selectWindowDimensions(
-            windowDimensions && windowDimensions
-        );
+        const newWindowDimensions = selectWindowDimensions();
 
         resizeCallbacks.map(resizeCallback =>
             resizeCallback(
@@ -71,7 +67,7 @@ export const useWindowState = () => {
         );
 
         throttledSetWindowDimensions(newWindowDimensions);
-    }, [windowDimensions && windowDimensions.width, resizeCallbacks]);
+    }, [windowDimensions && windowDimensions.width, windowDimensions && windowDimensions.height, resizeCallbacks]);
 
     useEffect(() => {
         window.addEventListener('resize', handleResizeEvent);

@@ -17,7 +17,7 @@ const Navigation: React.FC<INavigation> = (props) => {
     return (
         <StyledNavigation open={navOpen} onClick={() => handleClick()}>
             <StyledNavigationLink><Link href={'/'}>Home</Link></StyledNavigationLink>
-            {/* <StyledNavigationLink><Link href={'/kitchen-sink'}>Kitchen Sink</Link></StyledNavigationLink> */}
+            <StyledNavigationLink><Link href={'/cursor-demo'}>Cursor Demo</Link></StyledNavigationLink>
         </StyledNavigation>
     )
 }
