@@ -33,7 +33,9 @@
     ],
     "license": "MIT",
     "scripts": {
-        "buildPackage": "node build.js",
+        "build:package": "npm run build:esbuild && npm run build:types",
+        "build:esbuild": "node build.js",
+        "build:types": "tsc --emitDeclarationOnly --declaration --project tsconfig.build.json",
         "clean NPM": "npm ci",
         "install NPM": "npm install",
         "dev": "npm run dev -w example",

@@ -16,7 +16,7 @@ esbuild.build({
     outfile: './dist/index.esm.js',
     target: ['esnext'],
     loader: { ".ts": "ts", ".tsx": "tsx" }
-}).then(() => console.log("⚡ Done")).catch(() => process.exit(1));
+}).then(() => console.log("⚡ ESM Done")).catch(() => process.exit(1));
 
 // CJS
 esbuild.build({
@@ -25,4 +25,4 @@ esbuild.build({
     outfile: './dist/index.cjs.js',
     target: ['esnext'],
     loader: { ".ts": "ts", ".tsx": "tsx" },
-}).then(() => console.log("⚡ Done")).catch(() => process.exit(1));
+}).then(() => console.log("⚡ CJS Done")).catch(() => process.exit(1));
