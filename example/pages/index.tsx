@@ -4,7 +4,7 @@ import ImageComponent from '../components/image';
 import { StyledImageGrid } from '../components/imageGrid.styles';
 import { StyledPanel } from '../global/panel.styles';
 import { Header4, Paragraph } from '../global/typography';
-import { StyledPage } from './page.styles';
+import { StyledPage } from '../global/page.styles';
 import { useWindowContext } from '../../src/index';
 import { IWindowDimensions } from '../../src/window.context';
 import { useCallback, useEffect, useState } from 'react';
@@ -26,6 +26,7 @@ const Home: NextPage = () => {
     <StyledPage>
       <StyledPanel>
         <Header4>Directions</Header4>
+        <Paragraph>Resize the window to see the properties in the debug panel update</Paragraph>
       </StyledPanel>
       <StyledImageGrid columns={2}>
         <ImageComponent />

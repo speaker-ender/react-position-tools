@@ -32,7 +32,7 @@ export const useCursorPercent = () => {
     }, [cursorPercent, setCursorPercent]);
 
     useEffect(() => {
-        window && updateCursorPercent({ x: (x / window.innerWidth) * 100, y: (y / window.innerHeight) * 100 });
+        window && updateCursorPercent({ x: Math.round((x / window.innerWidth) * 10000) / 100, y: Math.round((y / window.innerHeight) * 10000) / 100 });
     }, [setCursorPercent, x, y]);
 
     return cursorPercent;
