@@ -7,7 +7,7 @@
         "dist"
     ],
     "description": "React Position Tools For HTML Elements",
-    "version": "v0.1.1",
+    "version": "v0.1.2",
     "author": "3nder",
     "devDependencies": {
         "@react-hook/throttle": "^2.2.0",
