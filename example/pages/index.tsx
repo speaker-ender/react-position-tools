@@ -6,9 +6,21 @@ import { StyledPanel } from '../global/panel.styles';
 import { Header4, Paragraph } from '../global/typography';
 import { StyledPage } from './page.styles';
 import { useWindowContext } from '../../src/index';
+import { IWindowDimensions } from '../../src/window.context';
+import { useCallback, useEffect, useState } from 'react';
 
 const Home: NextPage = () => {
-  const { windowDimensions } = useWindowContext();
+  const { registerResizeCallback, windowDimensions } = useWindowContext();
+  const [windowState, setWindowState] = useState<IWindowDimensions>();
+
+  const resizeCallback = useCallback((newWindowState?: IWindowDimensions) => {
+    newWindowState && setWindowState(newWindowState);
+  }, [setWindowState])
+
+  useEffect(() => {
+    resizeCallback(windowDimensions);
+    registerResizeCallback && registerResizeCallback(resizeCallback);
+  }, []);
 
   return (
     <StyledPage>
@@ -49,8 +61,8 @@ const Home: NextPage = () => {
       </StyledImageGrid>
       <DebugPanel defaultOpen={true}>
         <Header4>Window Properties</Header4>
-        <Paragraph>{`WindowWidth: ${windowDimensions && windowDimensions.width}px`}</Paragraph>
-        <Paragraph>{`WindowHeight: ${windowDimensions && windowDimensions.height}px`}</Paragraph>
+        <Paragraph>{`WindowWidth: ${windowState && windowState.width}px`}</Paragraph>
+        <Paragraph>{`WindowHeight: ${windowState && windowState.height}px`}</Paragraph>
       </DebugPanel>
     </StyledPage >
   )

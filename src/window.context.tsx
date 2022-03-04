@@ -11,7 +11,7 @@ export const WindowContext = createContext<IWindowState | null>(
     null
 );
 
-interface IWindowDimensions {
+export interface IWindowDimensions {
     width: number,
     height: number,
 }
