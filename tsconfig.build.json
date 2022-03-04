@@ -8,6 +8,7 @@
         "declarationMap": true,
         "outDir": "./dist",
         "declarationDir": "./dist",
+        "incremental": false,
     },
     "exclude": [
         "node_modules",
