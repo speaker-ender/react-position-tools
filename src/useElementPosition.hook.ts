@@ -1,6 +1,7 @@
-import { useCallback, useEffect } from 'react';
-import { bottomPosition, height, leftPosition, relativeBottomPosition, relativeTopPosition, rightPosition, topPosition, width } from '@speaker-ender/js-position-helpers';
+import { useCallback, useEffect, useState } from 'react';
+import { bottomEdgeDistance, height, leftEdgeDistance, topEdgeDistance, rightEdgeDistance, width } from '@speaker-ender/js-measure';
 import { useThrottle } from '@react-hook/throttle';
+import { useWindowContext } from './window.context';
 
 interface IElementPosition {
     top: number,
@@ -14,26 +15,34 @@ interface IElementPosition {
 }
 
 export const useElementPosition = () => {
+    const { windowDimensions } = useWindowContext();
     const [elementPosition, setElementPosition] = useThrottle<IElementPosition>(null!);
+    const [elementRef, setElementRef] = useState<HTMLElement>();
 
-    const updateElementPosition = useCallback((element: Element) => {
-        setElementPosition({
-            top: topPosition(element),
-            relativeTop: relativeTopPosition(element),
-            left: leftPosition(element),
-            bottom: bottomPosition(element),
-            relativeBottom: relativeBottomPosition(element),
-            right: rightPosition(element),
-            width: width(element),
-            height: height(element),
+    const updateElementPosition = useCallback(() => {
+
+        !!elementRef && setElementPosition({
+            top: topEdgeDistance(elementRef),
+            relativeTop: topEdgeDistance(elementRef, 'document'),
+            left: leftEdgeDistance(elementRef),
+            bottom: bottomEdgeDistance(elementRef),
+            relativeBottom: bottomEdgeDistance(elementRef, 'document'),
+            right: rightEdgeDistance(elementRef),
+            width: width(elementRef),
+            height: height(elementRef),
         });
-    }, [elementPosition, setElementPosition]);
+    }, [elementPosition, setElementPosition, elementRef]);
+
+    const updateElementRef = useCallback((element: HTMLElement) => {
+        setElementRef(element);
+    }, [setElementRef]);
 
     useEffect(() => {
+        updateElementPosition();
 
         return () => {
         }
-    }, [])
+    }, [windowDimensions, elementRef])
 
-    return { elementPosition, updateElementPosition };
+    return { elementPosition, updateElementPosition, updateElementRef };
 }

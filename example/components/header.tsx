@@ -18,7 +18,7 @@ const Header: React.FC<IHeader> = (props) => {
         <StyledHeader>
             <StyledHeaderTitle>
                 <Link href={'/'}>
-                    3NDER
+                    Position Tools
                 </Link>
             </StyledHeaderTitle>
             <StyledNavButton onClick={() => handleClick()}>
