@@ -4,7 +4,7 @@ export {
 } from './window.context';
 
 export {
-    useElementPosition
+    useElementTracking
 } from './useElementPosition.hook';
 
 export {
