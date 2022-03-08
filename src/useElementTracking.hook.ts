@@ -41,6 +41,7 @@ export const useElementTracking = () => {
         setElementRef(element);
     }, [setElementRef]);
 
+    // Updating relevant measurements when window is resized
     useEffect(() => {
         const recycledProps: Partial<IElementState> = elementState ? {
             relativeTop: elementState.relativeTop,
@@ -55,6 +56,7 @@ export const useElementTracking = () => {
         }
     }, [windowDimensions]);
 
+    // Updating relevant measurements when scrolling
     useEffect(() => {
         const recycledProps: Partial<IElementState> = elementState ? {
             top: elementState.top,
@@ -77,6 +79,7 @@ export const useElementTracking = () => {
 
     useEffect(() => {
         registerScrollCallback(updateScrollState);
+        updateElementState({});
 
     }, [isClientSide]);
 

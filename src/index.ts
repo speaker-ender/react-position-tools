@@ -5,7 +5,7 @@ export {
 
 export {
     useElementTracking
-} from './useElementPosition.hook';
+} from './useElementTracking.hook';
 
 export {
     useCursorPosition,

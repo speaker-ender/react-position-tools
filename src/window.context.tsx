@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { hasWindow, hasDocument, windowWidth, windowHeight } from '@speaker-ender/js-measure';
 import { throttle } from 'throttle-debounce';
-import { useEventCallback } from './helpers/hooks';
+import { useEventCallback } from '@speaker-ender/react-ssr-tools';
 
 const LISTENER_INTERVAL = 100;
 
