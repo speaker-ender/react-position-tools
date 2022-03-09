@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useThrottle } from '@react-hook/throttle';
-import { height, leftEdgeDistance, topEdgeDistance, width } from "@speaker-ender/js-measure";
+import { bottomEdgeDistance, height, leftEdgeDistance, rightEdgeDistance, topEdgeDistance, width } from "@speaker-ender/js-measure";
+import { useClientHook } from "@speaker-ender/react-ssr-tools";
 
 interface IPos {
     x: number;
@@ -8,6 +9,7 @@ interface IPos {
 }
 
 export const useCursorPosition = () => {
+    const isClientSide = useClientHook();
     const [cursorPosition, setCursorPosition] = useThrottle<IPos>({ x: 0, y: 0 }, 20);
     const [relativeElement, setRelativeElement] = useState<HTMLElement>();
 
@@ -16,28 +18,27 @@ export const useCursorPosition = () => {
         let yPosition = event.clientY;
 
         if (!!relativeElement) {
-            const elementWidth = width(relativeElement)
-            const top = topEdgeDistance(relativeElement, 'document');
-            const left = leftEdgeDistance(relativeElement);
-            const right = left + elementWidth;
-            const bottom = top + height(relativeElement);
-            xPosition = Math.min(Math.max(0, xPosition - left), right);
-            yPosition = Math.min(Math.max(0, yPosition - top), bottom);
+            const elementWidth = width(relativeElement);
+            const elementHeight = height(relativeElement);
+            const top = topEdgeDistance(relativeElement, 'viewport');
+            const left = leftEdgeDistance(relativeElement, 'viewport');
+            xPosition = Math.min(Math.max(0, xPosition - left), elementWidth);
+            yPosition = Math.min(Math.max(0, yPosition - top), elementHeight);
         }
-
         setCursorPosition({ x: xPosition, y: yPosition });
-    }, [cursorPosition]);
+    }, [cursorPosition, relativeElement]);
 
     const updateRelativeElement = useCallback((element: HTMLElement) => {
         setRelativeElement(element);
     }, [setRelativeElement]);
 
     useEffect(() => {
-        window && window.addEventListener('pointermove', (event) => updateCursor(event));
+        !!isClientSide && window.addEventListener('pointermove', (event) => updateCursor(event));
+
         return () => {
             window && window.removeEventListener('pointermove', (event) => updateCursor(event as PointerEvent))
         }
-    }, [])
+    }, [isClientSide]);
 
     return { ...cursorPosition, updateRelativeElement, relativeElement };
 }
@@ -57,13 +58,12 @@ export const useCursorPercent = () => {
                 y: Math.round((y / height(relativeElement)) * 10000) / 100
             });
         } else {
-            console.log('updating with window for some reason');
             window && updateCursorPercent({
                 x: Math.round((x / window.innerWidth) * 10000) / 100,
                 y: Math.round((y / window.innerHeight) * 10000) / 100
             });
         }
-    }, [setCursorPercent, x, y]);
+    }, [relativeElement, x, y]);
 
     return { ...cursorPercent, updateRelativeElement };
 }

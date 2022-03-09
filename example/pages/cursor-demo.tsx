@@ -5,11 +5,16 @@ import { Header4, Paragraph } from '../global/typography';
 import { StyledPage } from '../global/page.styles';
 import { useCursorPercent, useIsCursorActive, useCursorPosition } from '../../src/index';
 import DebugPanel from '../components/debugPanel';
+import { useCallback, useRef } from 'react';
 
 const CursorDemo: NextPage = () => {
     // const { x, y } = useCursorPosition();
-    const { x, y } = useCursorPercent();
+    const { x, y, updateRelativeElement } = useCursorPercent();
     const isActive = useIsCursorActive();
+
+    const refCallback = useCallback((element: HTMLElement) => {
+        updateRelativeElement(element);
+    }, [])
 
     return (
         <StyledPage>
@@ -21,7 +26,7 @@ const CursorDemo: NextPage = () => {
             <ImageComponent style={{
                 backgroundPosition: `${(x / 1.5 + 25).toPrecision(3)}% ${(y / 1.5 + 25).toPrecision(3)}%`,
                 backgroundSize: `400% 400%`
-            }} coloredBackground={true} />
+            }} coloredBackground={true} refCallback={refCallback} />
             <DebugPanel defaultOpen={true}>
                 <Header4>Window Properties</Header4>
                 <Paragraph>{`x: ${x}%`}</Paragraph>
