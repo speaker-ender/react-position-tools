@@ -10,7 +10,7 @@ import { IWindowDimensions } from '../../src/window.context';
 import { useCallback, useEffect, useState } from 'react';
 
 const Home: NextPage = () => {
-  const { registerResizeCallback, unregisterResizeCallback } = useWindowContext();
+  const { registerResizeCallback, unregisterResizeCallback, windowDimensions } = useWindowContext();
   const [windowState, setWindowState] = useState<IWindowDimensions>();
 
   const resizeCallback = useCallback((newHeight: number, newWidth: number) => {
@@ -19,6 +19,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     registerResizeCallback && registerResizeCallback(resizeCallback);
+    setWindowState(windowDimensions.current);
 
     return () => {
       unregisterResizeCallback && unregisterResizeCallback(resizeCallback);
