@@ -10,16 +10,19 @@ import { IWindowDimensions } from '../../src/window.context';
 import { useCallback, useEffect, useState } from 'react';
 
 const Home: NextPage = () => {
-  const { registerResizeCallback, windowDimensions } = useWindowContext();
+  const { registerResizeCallback, unregisterResizeCallback } = useWindowContext();
   const [windowState, setWindowState] = useState<IWindowDimensions>();
 
-  const resizeCallback = useCallback((newWindowState?: IWindowDimensions) => {
-    newWindowState && setWindowState(newWindowState);
+  const resizeCallback = useCallback((newHeight: number, newWidth: number) => {
+    !!newWidth && setWindowState({ height: newHeight, width: newWidth });
   }, [setWindowState])
 
   useEffect(() => {
-    resizeCallback(windowDimensions);
     registerResizeCallback && registerResizeCallback(resizeCallback);
+
+    return () => {
+      unregisterResizeCallback && unregisterResizeCallback(resizeCallback);
+    };
   }, []);
 
   return (

@@ -1,87 +1,96 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import { hasWindow, hasDocument, windowWidth, windowHeight } from '@speaker-ender/js-measure';
 import { throttle } from 'throttle-debounce';
-import { useEventCallback } from '@speaker-ender/react-ssr-tools';
+import { useClientHook, useEventCallback } from '@speaker-ender/react-ssr-tools';
 
-const LISTENER_INTERVAL = 100;
+const LISTENER_INTERVAL = 10;
 
-export type IWindowState = Partial<ReturnType<typeof useWindowState>>;
+export type IWindowState = ReturnType<typeof useWindowState>;
 
-export const WindowContext = createContext<IWindowState | null>(
-    null
-);
+export const WindowContext = createContext<IWindowState>(null!);
 
 export interface IWindowDimensions {
     width: number,
     height: number,
 }
 
-const selectWindowDimensions = (): IWindowDimensions | undefined =>
-    hasWindow
-        ? {
-            width: windowWidth(),
-            height: windowHeight(),
-        }
-        : undefined;
+const selectWindowDimensions = (): IWindowDimensions => {
+    return {
+        height: windowHeight(),
+        width: windowWidth()
+    };
+};
 
-export type ResizeCallback = (windowDimensions?: IWindowDimensions) => void;
+export type ResizeCallback = (height: number, width: number) => void;
 
 export const useWindowState = () => {
+    const isClientSide = useClientHook();
     const $html = React.useRef<HTMLElement | null>(null);
-    const [windowDimensions, setWindowDimensions] = useState(selectWindowDimensions);
-    const [resizeCallbacks, setResizeCallbacks] = useState<
-        ResizeCallback[]
-    >([]);
-
-    useEffect(() => {
-        if (hasDocument) {
-            $html.current = document.documentElement;
-        }
-    }, []);
+    const windowDimensions = useRef<IWindowDimensions>(selectWindowDimensions());
+    const resizeTimer = useRef<ReturnType<typeof setTimeout>>(null!);
+    const resizeCallbacks = useRef<ResizeCallback[]>([]);
 
     const registerResizeCallback = useCallback(
         (resizeCallback: ResizeCallback) => {
-            setResizeCallbacks([...resizeCallbacks, resizeCallback]);
+            resizeCallbacks.current = ([...resizeCallbacks.current, resizeCallback]);
         },
-        [resizeCallbacks]
+        [resizeCallbacks.current]
     );
 
-    const unregisterScrollCallback = useCallback(
+    const unregisterResizeCallback = useCallback(
         (resizeCallback: ResizeCallback) => {
-            setResizeCallbacks(
-                resizeCallbacks.filter(callback => callback !== resizeCallback)
-            );
+            resizeCallbacks.current = resizeCallbacks.current.filter(callback => callback !== resizeCallback);
         },
-        [resizeCallbacks]
+        [resizeCallbacks.current]
     );
 
-    const throttledSetWindowDimensions = throttle(LISTENER_INTERVAL, setWindowDimensions);
+    const throttledSetWindowDimensions = throttle(LISTENER_INTERVAL, (newWindowDimensions) => windowDimensions.current = newWindowDimensions);
 
     const handleResizeEvent = useEventCallback(() => {
         const newWindowDimensions = selectWindowDimensions();
 
-        resizeCallbacks.map(resizeCallback =>
+        resizeCallbacks.current.map(resizeCallback =>
             resizeCallback(
-                newWindowDimensions && newWindowDimensions
+                !!newWindowDimensions ? newWindowDimensions.height : 0,
+                !!newWindowDimensions ? newWindowDimensions.width : 0
             )
         );
 
         throttledSetWindowDimensions(newWindowDimensions);
-    }, [windowDimensions && windowDimensions.width, windowDimensions && windowDimensions.height, resizeCallbacks]);
+    }, [!!windowDimensions.current && windowDimensions.current.width, !!windowDimensions.current && windowDimensions.current.height, resizeCallbacks]);
+
+    const listenToResize = useCallback(() => {
+        clearTimeout(resizeTimer.current);
+        resizeTimer.current = setTimeout(
+            () =>
+                requestAnimationFrame(() => {
+                    handleResizeEvent();
+                }),
+            LISTENER_INTERVAL
+        );
+    }, [resizeTimer, handleResizeEvent, resizeCallbacks]);
 
     useEffect(() => {
-        window.addEventListener('resize', handleResizeEvent);
+        $html.current = document.documentElement;
+        const updateResizeActive = () => {
+            listenToResize();
+        }
+
+        if (!!isClientSide) {
+            handleResizeEvent();
+            window.addEventListener('resize', updateResizeActive);
+        }
 
         return () => {
-            window.removeEventListener('resize', handleResizeEvent);
+            window.removeEventListener('resize', updateResizeActive);
         };
-    }, [handleResizeEvent]);
+    }, [isClientSide]);
 
     return {
         $html,
         windowDimensions,
         registerResizeCallback,
-        unregisterScrollCallback
+        unregisterResizeCallback
     };
 };
 
