@@ -5,7 +5,7 @@ import { IWindowDimensions, useWindowContext } from './window.context';
 import { useScrollContext } from '@speaker-ender/react-scrollr';
 import { useClientHook } from '@speaker-ender/react-ssr-tools';
 
-interface IElementState {
+export interface IElementState {
     top: number,
     left: number,
     bottom: number,
@@ -15,6 +15,8 @@ interface IElementState {
     width: number,
     height: number,
 }
+
+export type TrackedElementCallback = (elementState: IElementState) => void;
 
 export const useElementTracking = () => {
     const isClientSide = useClientHook();
@@ -27,31 +29,55 @@ export const useElementTracking = () => {
     const [elementRef, setElementRef] = useState<HTMLElement>();
     const [elementState, setElementState] = useState<IElementState>(null!);
 
+    const trackedElementCallbacks = useRef<TrackedElementCallback[]>([]);
+
+    const registerTrackedElementCallback = useCallback(
+        (trackedElementCallback: TrackedElementCallback) => {
+            trackedElementCallbacks.current = ([...trackedElementCallbacks.current, trackedElementCallback]);
+        },
+        [trackedElementCallbacks.current]
+    );
+
+    const unregisterTrackedElementCallback = useCallback(
+        (trackedElementCallback: TrackedElementCallback) => {
+            trackedElementCallbacks.current = trackedElementCallbacks.current.filter(callback => callback !== trackedElementCallback);
+        },
+        [trackedElementCallbacks.current]
+    );
+
+    const getElementState = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
+        return !!elementRef && {
+            top: getNewProp.includes('top') ? topEdgeDistance(elementRef, 'document') : elementState.top,
+            left: getNewProp.includes('left') ? leftEdgeDistance(elementRef, 'document') : elementState.left,
+            bottom: getNewProp.includes('bottom') ? bottomEdgeDistance(elementRef, 'document') : elementState.bottom,
+            right: getNewProp.includes('right') ? rightEdgeDistance(elementRef, 'document') : elementState.right,
+            relativeTop: getNewProp.includes('relativeTop') ? topEdgeDistance(elementRef, 'viewport') : elementState.relativeTop,
+            relativeBottom: getNewProp.includes('relativeBottom') ? bottomEdgeDistance(elementRef, 'viewport') : elementState.relativeBottom,
+            width: getNewProp.includes('width') ? width(elementRef) : elementState.width,
+            height: getNewProp.includes('height') ? height(elementRef) : elementState.height,
+
+        }
+    }, [elementRef, elementState]);
 
     const updateElementState = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
-        if (!!elementRef) {
-            setElementState({
-                top: getNewProp.includes('top') ? topEdgeDistance(elementRef, 'document') : elementState.top,
-                left: getNewProp.includes('left') ? leftEdgeDistance(elementRef, 'document') : elementState.left,
-                bottom: getNewProp.includes('bottom') ? bottomEdgeDistance(elementRef, 'document') : elementState.bottom,
-                right: getNewProp.includes('right') ? rightEdgeDistance(elementRef, 'document') : elementState.right,
-                relativeTop: getNewProp.includes('relativeTop') ? topEdgeDistance(elementRef, 'viewport') : elementState.relativeTop,
-                relativeBottom: getNewProp.includes('relativeBottom') ? bottomEdgeDistance(elementRef, 'viewport') : elementState.relativeBottom,
-                width: getNewProp.includes('width') ? width(elementRef) : elementState.width,
-                height: getNewProp.includes('height') ? height(elementRef) : elementState.height,
-
-            });
+        const newElementState = getElementState(getNewProp);
+        if (newElementState) {
+            trackedElementCallbacks.current.map(trackedElementCallback =>
+                trackedElementCallback(
+                    newElementState
+                )
+            );
+            newElementState && setElementState(newElementState);
         }
-    }, [setElementState, elementRef, elementState]);
+    }, [setElementState, elementRef, getElementState]);
 
     const updateElementRef = useCallback((element: HTMLElement) => {
         setElementRef(element);
     }, [setElementRef]);
 
     // Updating relevant measurements when window is resized
-    // Want to change: top, left, bottom, right
     useEffect(() => {
-        updateElementState(['width', 'height', 'top', 'left', 'bottom', 'right']);
+        updateElementState(['width', 'height', 'top', 'left', 'bottom', 'right', 'relativeBottom', 'relativeTop']);
     }, [currentWindowState && currentWindowState.width, currentWindowState && currentWindowState.height]);
 
     // Updating relevant measurements when scrolling
@@ -87,5 +113,5 @@ export const useElementTracking = () => {
         };
     }, [isClientSide]);
 
-    return { elementState, updateElementState, updateElementRef };
+    return { elementState, updateElementState, updateElementRef, registerTrackedElementCallback, unregisterTrackedElementCallback };
 }

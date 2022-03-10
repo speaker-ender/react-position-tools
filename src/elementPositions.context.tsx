@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { hasWindow, hasDocument, windowWidth, windowHeight } from '@speaker-ender/js-measure';
+import { useClientHook } from '@speaker-ender/react-ssr-tools';
 
 export type IElementPositionsState = Partial<ReturnType<typeof useElementPositionsState>>;
 
@@ -15,6 +16,7 @@ export interface IPositionsCallbackProps {
 export type PositionsCallback = (IPositionsCallbackProps?: IPositionsCallbackProps) => void;
 
 export const useElementPositionsState = () => {
+    const isClientSide = useClientHook();
 
     useEffect(() => {
 

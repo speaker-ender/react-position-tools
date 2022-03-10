@@ -8,7 +8,11 @@ export {
 } from './useElementTracking.hook';
 
 export {
-    useCursorPosition,
-    useCursorPercent,
+    useCursorContext,
+    CursorContextProvider
+} from './cursor.context';
+
+export {
+    useCursorTracking,
     useIsCursorActive
-} from './useCursorPosition.hook';
+} from './useCursorTracking.hook';

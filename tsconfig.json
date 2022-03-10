@@ -24,7 +24,7 @@
     "include": [
         "**/*.ts",
         "**/*.tsx",
-        "build.js"
+        "build.mjs"
     ],
     "exclude": [
         "node_modules"

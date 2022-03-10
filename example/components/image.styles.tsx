@@ -10,5 +10,4 @@ export const StyledImage = styled.div<IStyledImage>`
     height: 100%;
     background: ${p => p.coloredBackground ? `linear-gradient(-45deg, ${p.theme.themeProps.primaryLight}, ${p.theme.themeProps.primaryDark}, ${p.theme.themeProps.secondaryLight}, ${p.theme.themeProps.secondaryDark})` : 'white'};
     backdrop-filter: invert();
-    transition: ${p => p.coloredBackground ? 'background 10ms ease-in-out' : 'background 400ms ease-in-out'};
 `;

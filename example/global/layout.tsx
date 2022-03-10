@@ -13,6 +13,7 @@ import Alert from "../components/alert";
 import Message from "../components/message";
 import { WindowContextProvider } from '../../src/index';
 import { ScrollContextProvider } from "@speaker-ender/react-scrollr";
+import { CursorContextProvider } from "../../src/cursor.context";
 
 
 const Layout: React.FC = ({ children }) => {
@@ -22,24 +23,26 @@ const Layout: React.FC = ({ children }) => {
         <ScrollContextProvider>
             <ThemeProvider theme={{ ...theme, isInvert: themeInverted }}>
                 <WindowContextProvider>
-                    <div className="container">
-                        <GlobalStyle />
-                        <Head>
-                            <title>Next.JS Starter</title>
-                            <link rel="icon" href="/favicon.ico" />
-                        </Head>
-                        <main>
-                            <Header />
-                            <Navigation />
-                            <StyledPage>
-                                {children}
-                            </StyledPage>
-                        </main>
-                        <Overlay />
-                        <Alert />
-                        <InvertTheme />
-                        <Message />
-                    </div>
+                    <CursorContextProvider>
+                        <div className="container">
+                            <GlobalStyle />
+                            <Head>
+                                <title>Next.JS Starter</title>
+                                <link rel="icon" href="/favicon.ico" />
+                            </Head>
+                            <main>
+                                <Header />
+                                <Navigation />
+                                <StyledPage>
+                                    {children}
+                                </StyledPage>
+                            </main>
+                            <Overlay />
+                            <Alert />
+                            <InvertTheme />
+                            <Message />
+                        </div>
+                    </CursorContextProvider>
                 </WindowContextProvider>
             </ThemeProvider>
         </ScrollContextProvider>

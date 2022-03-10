@@ -1,20 +1,25 @@
 import type { NextPage } from 'next'
 import ImageComponent from '../components/image';
 import { StyledPanel } from '../global/panel.styles';
-import { Header4, Paragraph } from '../global/typography';
+import { Header4, Header5, Paragraph } from '../global/typography';
 import { StyledPage } from '../global/page.styles';
-import { useCursorPercent, useIsCursorActive, useCursorPosition } from '../../src/index';
+import { useCursorTracking, useIsCursorActive, useCursorContext } from '../../src/index';
 import DebugPanel from '../components/debugPanel';
-import { useCallback, useRef } from 'react';
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { StyledCursorContainer } from '../components/cursor-demo.styles';
+import { StyledImageGrid } from '../components/imageGrid.styles';
+import CursorParalax from '../components/cursorParalax';
+import { IPos } from '../../src/cursor.context';
+import { ICursorTrackingState } from '../../src/useCursorTracking.hook';
 
 const CursorDemo: NextPage = () => {
-    // const { x, y } = useCursorPosition();
-    const { x, y, updateRelativeElement } = useCursorPercent();
+    const { cursorPosition } = useCursorContext();
     const isActive = useIsCursorActive();
+    const [activeCursorPosition, setActiveCursorPosition] = useState<ICursorTrackingState>(null!);
 
-    const refCallback = useCallback((element: HTMLElement) => {
-        updateRelativeElement(element);
-    }, [])
+    const positionCallback = useCallback((activePixels: IPos, activePercent: IPos) => {
+        activePixels && setActiveCursorPosition({ pixels: activePixels, percent: activePercent })
+    }, [setActiveCursorPosition]);
 
     return (
         <StyledPage>
@@ -23,14 +28,29 @@ const CursorDemo: NextPage = () => {
                 <Paragraph>Move the cursor around the viewport to see the image background change colors</Paragraph>
                 <Paragraph>The percentage values being used can be seen in the debug panel</Paragraph>
             </StyledPanel>
-            <ImageComponent style={{
-                backgroundPosition: `${(x / 1.5 + 25).toPrecision(3)}% ${(y / 1.5 + 25).toPrecision(3)}%`,
-                backgroundSize: `400% 400%`
-            }} coloredBackground={true} refCallback={refCallback} />
+            <StyledCursorContainer>
+                <StyledImageGrid columns={3}>
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                </StyledImageGrid>
+            </StyledCursorContainer>
             <DebugPanel defaultOpen={true}>
-                <Header4>Window Properties</Header4>
-                <Paragraph>{`x: ${x}%`}</Paragraph>
-                <Paragraph>{`y: ${y}%`}</Paragraph>
+                <Header4>Cursor Properties</Header4>
+                <Header5>Relative To Element</Header5>
+                <Paragraph>{`x: ${activeCursorPosition && activeCursorPosition.percent.x}%`}</Paragraph>
+                <Paragraph>{`y: ${activeCursorPosition && activeCursorPosition.percent.y}%`}</Paragraph>
+                <Paragraph>{`x: ${activeCursorPosition && activeCursorPosition.pixels.x}px`}</Paragraph>
+                <Paragraph>{`y: ${activeCursorPosition && activeCursorPosition.pixels.y}px`}</Paragraph>
+                <Header5>Relative To Viewport</Header5>
+                <Paragraph>{`x: ${cursorPosition?.currentPosition?.x}px`}</Paragraph>
+                <Paragraph>{`y: ${cursorPosition?.currentPosition?.y}px`}</Paragraph>
             </DebugPanel>
         </StyledPage >
     )
