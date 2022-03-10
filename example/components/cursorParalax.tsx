@@ -9,7 +9,7 @@ import { Paragraph } from "../global/typography";
 
 interface ICursorParalax {
     style?: React.CSSProperties;
-    coloredBackground?: boolean;
+    wireframe?: boolean;
     positionCallback: (activePixels: IPos, activePercent: IPos) => void;
 }
 
@@ -65,17 +65,20 @@ const CursorParalax: React.FC<ICursorParalax> = (props) => {
     }
 
     return (
-        <StyledCursorParalaxWrapper>
+        <StyledCursorParalaxWrapper wireframe={props.wireframe}>
             <StyledCursorParalax
+                wireframe={props.wireframe}
                 style={{
                     transform: isHover ? `rotateY(${getOffsetXPercent(percent.x) * 8}deg) rotateX(${getOffsetYPercent(percent.y) * 8}deg) translate3d( 0, -2px, 0 )` : 'rotateY(0deg) rotateX(0deg)'
-                }} ref={imageWrapperRef} >
+                }}
+                ref={imageWrapperRef}
+            >
                 <ImageComponent style={{
                     backgroundPosition: isHover ? `${(percent.x / 1.5 + 25).toPrecision(3)}% ${(percent.y / 1.5 + 25).toPrecision(3)}%` : '',
                     transform: isHover ? `scale(0.9)` : `scale(0.8)`
                 }} coloredBackground={true} />
                 <Paragraph style={{
-                    transform: isHover ? `rotateY(${getOffsetXPercent(percent.x) * 5}deg) rotateX(${getOffsetYPercent(percent.y) * 5}deg) translate3d(-50%, -50%, 200px )` : 'rotateY(0deg) rotateX(0deg)'
+                    transform: isHover ? `rotateY(${getOffsetXPercent(percent.x) * 5}deg) rotateX(${getOffsetYPercent(percent.y) * 5}deg) translate3d(-50%, -100%, 150px )` : 'translate3d(-50%, -100%, 150px ) rotateY(0deg) rotateX(0deg)'
                 }}>Text</Paragraph>
             </StyledCursorParalax>
         </StyledCursorParalaxWrapper>

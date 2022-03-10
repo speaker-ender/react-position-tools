@@ -21,34 +21,36 @@ export const useCursorTracking = () => {
         percent: cursorPosition.currentPosition || { x: 0, y: 0 }
     });
 
-    const getPercent = useCallback((currentPos: IPos, currentElementState: typeof elementState) => {
+    const getPercent = useCallback((newCursorPosition: IPos) => {
         return {
-            x: Math.round((currentPos.x / currentElementState.width) * 10000) / 100,
-            y: Math.round((currentPos.y / currentElementState.height) * 10000) / 100
+            x: Math.round((newCursorPosition.x / trackedElementState.width) * 10000) / 100,
+            y: Math.round((newCursorPosition.y / trackedElementState.height) * 10000) / 100
         }
-    }, [])
+    }, [trackedElementState && trackedElementState.width, trackedElementState && trackedElementState.height])
 
     const updateCursor = useCallback(() => {
         let xPosition = currentCursorPosition.current ? currentCursorPosition.current.x : 0;
         let yPosition = currentCursorPosition.current ? currentCursorPosition.current.y : 0;
 
-        if (!!elementState) {
+        if (!!trackedElementState) {
             xPosition = Math.min(Math.max(0, xPosition - trackedElementState.left), trackedElementState.width);
             yPosition = Math.min(Math.max(0, yPosition - trackedElementState.relativeTop), trackedElementState.height);
         }
 
         const newPixels = { x: xPosition, y: yPosition };
 
-        setRelativeCursorPosition({ pixels: newPixels, percent: getPercent(newPixels, elementState) });
-    }, [currentCursorPosition.current && currentCursorPosition.current.x, trackedElementState]);
+        setRelativeCursorPosition({ pixels: newPixels, percent: getPercent(newPixels) });
+    }, [currentCursorPosition.current && currentCursorPosition.current.x, trackedElementState, getPercent, setRelativeCursorPosition]);
 
+
+    // vvvv REGISTERING CALLBACKS
     const updateCurrentCursorPosition = useCallback((currentPosition?: IPos, previousPosition?: IPos) => {
         currentCursorPosition.current = currentPosition || { x: 0, y: 0 };
     }, []);
 
     const updateTrackedElementState = useCallback((newElementState: IElementState) => {
         setTrackedElementState(newElementState);
-    }, [setTrackedElementState])
+    }, [setTrackedElementState]);
 
     const updateRelativeElement = useCallback((element: HTMLElement) => {
         updateElementRef(element);
@@ -58,6 +60,7 @@ export const useCursorTracking = () => {
             unregisterTrackedElementCallback(updateTrackedElementState);
         }
     }, [updateElementRef]);
+    // ^^^^ REGISTERING CALLBACKS
 
     useEffect(() => {
         !!trackedElementState && updateCursor()
@@ -75,6 +78,17 @@ export const useCursorTracking = () => {
             unregisterCursorCallback(updateCurrentCursorPosition);
         }
     }, [isClientSide]);
+
+    useEffect(() => {
+        if (!!isClientSide) {
+            console.log('cursor tracking is re-rendering');
+            registerCursorCallback(updateCurrentCursorPosition);
+        }
+
+        return () => {
+            unregisterCursorCallback(updateCurrentCursorPosition);
+        }
+    }, []);
 
     return { ...relativeCursorPosition, updateRelativeElement };
 }

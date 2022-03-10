@@ -71,6 +71,17 @@ export const useCursorState = () => {
         };
     }, [isClientSide]);
 
+    // useEffect(() => {
+    //     if (!!isClientSide) {
+    //         window.addEventListener('pointermove', throttledCursorEvent);
+    //         console.log('cursor context is re-rendering');
+    //     }
+
+    //     return () => {
+    //         window.removeEventListener('pointermove', throttledCursorEvent);
+    //     }
+    // }, []);
+
     return {
         cursorPosition,
         registerCursorCallback,

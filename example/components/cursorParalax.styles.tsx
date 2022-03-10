@@ -3,7 +3,7 @@ import { Paragraph } from "../global/typography";
 import { StyledImage } from "./image.styles";
 
 interface IStyledCursorImage {
-
+    wireframe?: boolean;
 }
 
 export const StyledCursorImage = css<IStyledCursorImage>`
@@ -15,7 +15,8 @@ export const StyledCursorImage = css<IStyledCursorImage>`
     background-size: 400% 400%;
     transform: scale(1) translate3d( 0, -2px, 0 );
     transition: background-position 500ms cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
-    outline: solid ${p => p.theme.themeProps.secondary} 5px;
+    box-shadow: 0px 0px 25px 5px ${p => p.theme.themeProps.backgroundInvert};
+    outline: solid ${p => p.wireframe ? `${p.theme.themeProps.secondary}5px` : 'none'};
 
     & span {
         top: 0;
@@ -33,7 +34,7 @@ export const StyledCursorParalaxWrapper = styled.div<IStyledCursorImage>`
     perspective-origin: center center;
     grid-template-columns: 5% 1fr 5%;
     align-items: center;
-    outline: solid ${p => p.theme.themeProps.primary} 5px;
+    outline: solid ${p => p.wireframe ? `${p.theme.themeProps.primary}5px` : 'none'};
     overflow: hidden;
     transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 `;
@@ -43,10 +44,10 @@ export const StyledCursorParalax = styled.div<IStyledCursorImage>`
     height: 100%;
     perspective-origin: center center;
     align-items: center;
-    outline: solid ${p => p.theme.themeProps.primary} 5px;
     transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     perspective: 300;
     position: relative;
+    outline: solid ${p => p.wireframe ? `${p.theme.themeProps.primary}5px` : 'none'};
 
     & ${StyledImage} {
         ${StyledCursorImage};
@@ -57,7 +58,9 @@ export const StyledCursorParalax = styled.div<IStyledCursorImage>`
         top: 50%;
         left: 50%;
         z-index: 22;
-        transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-        transform: scale(1) translate3d(-100%, -100%, 200px );
+        color: ${p => p.theme.themeProps.text};
+        text-shadow: 0px 0px 10px ${p => p.theme.themeProps.textInvert};
+        transition: transform 0.2s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+        transform: scale(1) translate3d(-100%, -100%, 100px );
     }
 `;

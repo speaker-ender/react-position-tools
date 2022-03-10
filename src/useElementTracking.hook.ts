@@ -48,7 +48,7 @@ export const useElementTracking = () => {
     const getElementState = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
         return !!elementRef && {
             top: getNewProp.includes('top') ? topEdgeDistance(elementRef, 'document') : elementState.top,
-            left: getNewProp.includes('left') ? leftEdgeDistance(elementRef, 'document') : elementState.left,
+            left: getNewProp.includes('left') ? leftEdgeDistance(elementRef, 'viewport') : elementState.left,
             bottom: getNewProp.includes('bottom') ? bottomEdgeDistance(elementRef, 'document') : elementState.bottom,
             right: getNewProp.includes('right') ? rightEdgeDistance(elementRef, 'document') : elementState.right,
             relativeTop: getNewProp.includes('relativeTop') ? topEdgeDistance(elementRef, 'viewport') : elementState.relativeTop,
@@ -113,5 +113,5 @@ export const useElementTracking = () => {
         };
     }, [isClientSide]);
 
-    return { elementState, updateElementState, updateElementRef, registerTrackedElementCallback, unregisterTrackedElementCallback };
+    return { elementState, updateElementState, updateElementRef, elementRef, registerTrackedElementCallback, unregisterTrackedElementCallback };
 }
