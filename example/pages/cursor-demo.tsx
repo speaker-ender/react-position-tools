@@ -29,16 +29,31 @@ const CursorDemo: NextPage = () => {
                 <Paragraph>The percentage values being used can be seen in the debug panel</Paragraph>
             </StyledPanel>
             <StyledCursorContainer>
+                <StyledImageGrid columns={2}>
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <CursorParalax positionCallback={positionCallback} />
+                    <StyledImageGrid columns={2}>
+                        <CursorParalax positionCallback={positionCallback} />
+                        <CursorParalax positionCallback={positionCallback} />
+                        <CursorParalax positionCallback={positionCallback} />
+                        <CursorParalax positionCallback={positionCallback} />
+                    </StyledImageGrid>
+                </StyledImageGrid>
                 <StyledImageGrid columns={3}>
                     <CursorParalax positionCallback={positionCallback} />
                     <CursorParalax positionCallback={positionCallback} />
                     <CursorParalax positionCallback={positionCallback} />
                     <CursorParalax positionCallback={positionCallback} />
                     <CursorParalax positionCallback={positionCallback} />
-                    <CursorParalax positionCallback={positionCallback} />
-                    <CursorParalax positionCallback={positionCallback} />
-                    <CursorParalax positionCallback={positionCallback} />
-                    <CursorParalax positionCallback={positionCallback} />
+                    <StyledImageGrid columns={3}>
+                        <CursorParalax positionCallback={positionCallback} />
+                        <CursorParalax positionCallback={positionCallback} />
+                        <CursorParalax positionCallback={positionCallback} />
+                        <CursorParalax positionCallback={positionCallback} />
+                        <CursorParalax positionCallback={positionCallback} />
+                        <CursorParalax positionCallback={positionCallback} />
+                    </StyledImageGrid>
                 </StyledImageGrid>
             </StyledCursorContainer>
             <DebugPanel defaultOpen={true}>
