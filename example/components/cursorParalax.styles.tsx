@@ -14,7 +14,7 @@ export const StyledCursorImage = css<IStyledCursorImage>`
     transform-style: preserve-3d;
     background-size: 400% 400%;
     transform: scale(1) translate3d( 0, -2px, 0 );
-    transition: background-position 500ms cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: background-position 500ms cubic-bezier(0.215, 0.61, 0.355, 1), background-color 250ms cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     box-shadow: 0px 0px 25px 5px ${p => p.theme.themeProps.backgroundInvert};
     outline: solid ${p => p.wireframe ? `${p.theme.themeProps.secondary}5px` : 'none'};
 
