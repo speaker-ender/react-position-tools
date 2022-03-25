@@ -113,6 +113,7 @@ export const SmallTextStyle = css`
 export const NavigationTextStyle = css`
     font-family: ${FONTS.main};
     font-size: 2rem;
+    overflow-wrap: break-word;
 `
 
 export const NavigationSubPageTextStyle = css`

@@ -55,7 +55,7 @@ export const StyledNavigationHeader = styled.div`
 export const StyledNavigationLink = styled.div`
     ${NavigationTextStyle}
     padding: ${p => `${p.theme.spacingProps.textSpacingY} ${p.theme.spacingProps.textSpacingX}`};
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
 
     & a {
         ${LinkStyles}

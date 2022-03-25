@@ -25,9 +25,30 @@ const Navigation: React.FC<INavigation> = (props) => {
                     <StyledNavigationHeader>
                         Components
                     </StyledNavigationHeader>
+                    <StyledNavigationLink><Link href={'/components/cursorContextProvider'}>
+                        CursorContextProvider
+                    </Link></StyledNavigationLink>
+                    <StyledNavigationLink><Link href={'/components/windowContextProvider'}>
+                        WindowContextProvider
+                    </Link></StyledNavigationLink>
                     <StyledNavigationHeader>
                         Hooks
                     </StyledNavigationHeader>
+                    <StyledNavigationLink><Link href={'/hooks/useCursorContext'}>
+                        useCursorContext
+                    </Link></StyledNavigationLink>
+                    <StyledNavigationLink><Link href={'/hooks/useCursorTracking'}>
+                        useCursorTracking
+                    </Link></StyledNavigationLink>
+                    <StyledNavigationLink><Link href={'/hooks/useElementTracking'}>
+                        useElementTracking
+                    </Link></StyledNavigationLink>
+                    <StyledNavigationLink><Link href={'/hooks/useIsCursorActive'}>
+                        useIsCursorActive
+                    </Link></StyledNavigationLink>
+                    <StyledNavigationLink><Link href={'/hooks/useWindowContext'}>
+                        useWindowContext
+                    </Link></StyledNavigationLink>
                     <Drawer title='Demos'>
                         <StyledNavigationLink><Link href={'/demos/cursor-demo'}>
                             Cursor
