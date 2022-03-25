@@ -1,7 +1,21 @@
 import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
+import { DARK_THEME, LIGHT_THEME, setColorsByTheme } from '../global/theme.styles';
 
+const MagicScriptTag = () => {
+    const functionString = String(setColorsByTheme).replace(
+        "'DARK_THEME'",
+        JSON.stringify(DARK_THEME)
+    ).replace(
+        "'LIGHT_THEME'",
+        JSON.stringify(LIGHT_THEME)
+    );
+    const codeToRunOnClient = `(${functionString})()`;
+
+    return <script dangerouslySetInnerHTML={{ __html: codeToRunOnClient }} />;
+};
 export default class MyDocument extends Document {
+
     static async getInitialProps(ctx: DocumentContext) {
         const sheet = new ServerStyleSheet()
         const originalRenderPage = ctx.renderPage
@@ -33,6 +47,7 @@ export default class MyDocument extends Document {
             <Html lang="en">
                 <Head>
                 </Head>
+                <MagicScriptTag />
                 <body>
                     <Main />
                     <NextScript />

@@ -1,26 +1,40 @@
 import { createGlobalStyle } from "styled-components";
+import { transition } from "./animation.styles";
 import { darkThemeProps, lightThemeProps } from "./theme.styles";
+import { media } from "./variables/breakpoints";
+import { spacingProps } from "./variables/cssProp";
 
 export const GlobalStyle = createGlobalStyle`
-  :root {
-    ${props => props.theme.isInvert ? darkThemeProps : lightThemeProps}
+  body {
+    ${spacingProps}
 
-    @media (prefers-color-scheme: dark) {
-        ${props => props.theme.isInvert ? lightThemeProps : darkThemeProps}
-    }
+    ${props => !!props.theme.themeStyle ? props.theme.themeStyle === 'dark' ? darkThemeProps : lightThemeProps : ''};
 
-    font-size: 17px;
+    margin: 0;
+    background: ${p => p.theme.themeProps.background};
+    transition: background-color ${transition.appear}, color ${transition.appearSecondary};
+    font-size: 12px;
 
-    @media (max-width: 900px) {
+    @media ${media.tablet} {
       font-size: 15px;
+
     }
-    @media (max-width: 400px) {
-      font-size: 12px;
+
+    @media ${media.desktop} {
+      font-size: 17px;
+
     }
   }
 
-  body {
-    margin: 0;
-    background: ${p => p.theme.themeProps.background};
+  &.modal-open,
+  &.nav-open {
+    position: fixed;
+    overflow-y: scroll;
+  }
+
+  .modal-open,
+  .nav-open {
+    width: 100%;
+    overflow: hidden;
   }
 `

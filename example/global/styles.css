@@ -1,0 +1,21 @@
+@font-face {
+    font-family: "Orbitron";
+    src: url("fonts/Orbitron-Medium.ttf") format('truetype');
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: "WorkSans";
+    src: url("fonts/WorkSans-Medium.ttf") format('truetype');
+    font-style: bold;
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: "WorkSansBold";
+    src: url("fonts/WorkSans-Bold.ttf") format('truetype');
+    font-style: bold;
+    font-weight: 500;
+    font-display: swap;
+}

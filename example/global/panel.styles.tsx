@@ -1,17 +1,18 @@
 import styled, { css } from "styled-components";
+import { ContentBackgroundStyles } from "./background.styles";
 
 interface IStyledPanel {
+    type?: 'interface' | 'content';
 }
 
 export const PanelStyles = css`
-        padding: 25px 50px;
-        margin-bottom: 25px;
-        background: ${p => p.theme.themeProps.tertiaryPartialOpacity};
-        border-radius: ${p => p.theme.rounding.borderRadius};
-        box-shadow: ${p => `0px 0px 10px ${p.theme.themeProps.backgroundInvertMediumOpacity}`};
-        backdrop-filter: blur(15px);
+    padding: ${p => p.theme.spacingProps.defaultSpacing};
+    margin-bottom: ${p => p.theme.spacingProps.defaultSpacing};
+    border-radius: ${p => p.theme.rounding.borderRadius};
+    box-shadow: ${p => `0px 0px 6px -4px ${p.theme.themeProps.backgroundInvert}`};
 `;
 
 export const StyledPanel = styled.div<IStyledPanel>`
-        ${PanelStyles};
+    ${PanelStyles}
+    ${ContentBackgroundStyles}
 `;

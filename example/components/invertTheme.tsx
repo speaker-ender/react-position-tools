@@ -1,18 +1,33 @@
 import * as React from "react"
 import { useSiteState } from "../hooks/useSiteState";
 import { StyledInvertThemeButton } from "./invertTheme.styles";
+import { Suspense } from "react";
+import LightDark from "../assets/lightDark";
 
 export interface IInvertTheme {
+    themeStyle?: string
 }
 
-const InvertTheme: React.FC<IInvertTheme> = () => {
-    const { themeInverted, setThemeInverted } = useSiteState();
+export const RawInvertTheme: React.FC<IInvertTheme> = ({ themeStyle }) => {
+    const { setThemeStyle } = useSiteState();
 
     return (
-        <StyledInvertThemeButton onClick={() => setThemeInverted(!themeInverted)}>
-            Set
+        <StyledInvertThemeButton themeStyle={themeStyle || undefined} onClick={() => setThemeStyle(themeStyle === 'light' ? 'dark' : 'light')}>
+            <LightDark />
         </StyledInvertThemeButton>
     )
 }
 
-export default InvertTheme
+const InvertTheme: React.FC<IInvertTheme> = () => {
+    const { themeStyle } = useSiteState();
+
+    return (
+        <Suspense fallback={<StyledInvertThemeButton themeStyle={undefined}>
+        </StyledInvertThemeButton>
+        }>
+            <RawInvertTheme themeStyle={themeStyle} />
+        </Suspense>
+    )
+}
+
+export default InvertTheme;
