@@ -50,6 +50,9 @@ const Navigation: React.FC<INavigation> = (props) => {
                         useWindowContext
                     </Link></StyledNavigationLink>
                     <Drawer title='Demos'>
+                        <StyledNavigationLink><Link href={'/demos/window-context-demo'}>
+                            Window Context
+                        </Link></StyledNavigationLink>
                         <StyledNavigationLink><Link href={'/demos/cursor-demo'}>
                             Cursor
                         </Link></StyledNavigationLink>

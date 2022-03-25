@@ -1,13 +1,20 @@
 import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
-import { hasWindow, hasDocument, windowWidth, windowHeight } from '@speaker-ender/js-measure';
+import { windowWidth, windowHeight } from '@speaker-ender/js-measure';
 import { throttle } from 'throttle-debounce';
 import { useClientHook, useEventCallback } from '@speaker-ender/react-ssr-tools';
 
 const LISTENER_INTERVAL = 10;
 
+export type IWindowOptions = {
+    resizeUpdateStateInterval: number;
+    resizeCallbackInterval: number;
+}
+
 export type IWindowState = ReturnType<typeof useWindowState>;
 
 export const WindowContext = createContext<IWindowState>(null!);
+
+export interface IWindowContextProvider extends Partial<IWindowOptions> { }
 
 export interface IWindowDimensions {
     width: number,
@@ -23,11 +30,10 @@ const selectWindowDimensions = (): IWindowDimensions => {
 
 export type ResizeCallback = (height: number, width: number) => void;
 
-export const useWindowState = () => {
+export const useWindowState = ({ resizeUpdateStateInterval, resizeCallbackInterval }: IWindowOptions) => {
     const isClientSide = useClientHook();
     const $html = React.useRef<HTMLElement | null>(null);
     const windowDimensions = useRef<IWindowDimensions>(selectWindowDimensions());
-    const resizeTimer = useRef<ReturnType<typeof setTimeout>>(null!);
     const resizeCallbacks = useRef<ResizeCallback[]>([]);
 
     const registerResizeCallback = useCallback(
@@ -44,7 +50,7 @@ export const useWindowState = () => {
         [resizeCallbacks.current]
     );
 
-    const throttledSetWindowDimensions = throttle(LISTENER_INTERVAL, (newWindowDimensions) => windowDimensions.current = newWindowDimensions);
+    const throttledSetWindowDimensions = throttle(resizeUpdateStateInterval, (newWindowDimensions) => windowDimensions.current = newWindowDimensions);
 
     const handleResizeEvent = useEventCallback(() => {
         const newWindowDimensions = selectWindowDimensions();
@@ -57,32 +63,17 @@ export const useWindowState = () => {
         );
 
         throttledSetWindowDimensions(newWindowDimensions);
-    }, [!!windowDimensions.current && windowDimensions.current.width, !!windowDimensions.current && windowDimensions.current.height, resizeCallbacks]);
+    }, [windowDimensions.current, resizeCallbacks]);
 
-    const listenToResize = useCallback(() => {
-        clearTimeout(resizeTimer.current);
-        resizeTimer.current = setTimeout(
-            () =>
-                requestAnimationFrame(() => {
-                    handleResizeEvent();
-                }),
-            LISTENER_INTERVAL
-        );
-    }, [resizeTimer, handleResizeEvent, resizeCallbacks]);
+    const throttledResizeEvent = throttle(resizeCallbackInterval, handleResizeEvent);
 
     useEffect(() => {
         $html.current = document.documentElement;
-        const updateResizeActive = () => {
-            listenToResize();
-        }
 
-        if (!!isClientSide) {
-            handleResizeEvent();
-            window.addEventListener('resize', updateResizeActive);
-        }
+        !!isClientSide && window.addEventListener('resize', throttledResizeEvent);
 
         return () => {
-            window.removeEventListener('resize', updateResizeActive);
+            window.removeEventListener('resize', throttledResizeEvent);
         };
     }, [isClientSide]);
 
@@ -99,15 +90,16 @@ export const useWindowContext = () => {
 
     if (!windowContext) {
         throw new Error(
-            'NavMeta Context used outside of NavMetaContext.Provider'
+            'WindowContext used outside of WindowContext.Provider'
         );
     }
 
     return windowContext;
 };
 
-export const WindowContextProvider: React.FC = (props) => {
-    const windowState = useWindowState();
+export const WindowContextProvider: React.FC<IWindowContextProvider> = (props) => {
+    const windowState = useWindowState({ resizeUpdateStateInterval: LISTENER_INTERVAL, resizeCallbackInterval: LISTENER_INTERVAL, ...props });
+
 
     return (
         <WindowContext.Provider value={windowState}>
