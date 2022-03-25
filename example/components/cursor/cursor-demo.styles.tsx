@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { StyledImageGrid } from "../../components/content/imageGrid.styles";
+import { StyledImageGrid } from "../content/imageGrid.styles";
 
 interface IStyledCursorImage {
 

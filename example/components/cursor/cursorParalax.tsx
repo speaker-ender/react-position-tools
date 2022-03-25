@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyledCursorContainer } from "../../pages/demos/cursor-demo.styles";
+import { StyledCursorContainer } from "./cursor-demo.styles";
 import ImageComponent from "../content/image";
 import { useCursorTracking, useIsCursorActive, useCursorContext } from '../../../src/index';
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
