@@ -61,16 +61,6 @@ export const useCursorTracking = () => {
         }
     }, [isClientSide]);
 
-    useEffect(() => {
-        if (!!isClientSide) {
-            registerCursorCallback(updateCurrentCursorPosition);
-        }
-
-        return () => {
-            unregisterCursorCallback(updateCurrentCursorPosition);
-        }
-    }, []);
-
     return { ...relativeCursorPosition, refCallback };
 }
 

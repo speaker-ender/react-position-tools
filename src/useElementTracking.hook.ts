@@ -4,6 +4,7 @@ import { useWindowContext } from './window.context';
 import { useScrollContext } from '@speaker-ender/react-scrollr';
 import { useClientHook } from '@speaker-ender/react-ssr-tools';
 import { throttle } from 'throttle-debounce';
+import { useRegisteredCallbacks } from './helpers/hooks';
 
 const UPDATE_INTERVAL = 10;
 export interface IElementState {
@@ -25,7 +26,7 @@ export interface IElementTrackingOptions {
 export type TrackedElementCallback = (elementState: Partial<IElementState>) => void;
 
 export const useElementTrackingState = () => {
-    const { useElementTrackingCallback, refCallback } = useElementTracking();
+    const { registerElementTrackingCallback, unregisterElementTrackingCallback, refCallback } = useElementTracking();
     const [elementState, setElementState] = useState<Partial<IElementState>>({});
 
     const updateElementState = useCallback((newElementState: Partial<IElementState>) => {
@@ -33,13 +34,18 @@ export const useElementTrackingState = () => {
     }, [elementState, setElementState])
 
     useEffect(() => {
-        useElementTrackingCallback(updateElementState)
+        registerElementTrackingCallback(updateElementState)
+
+        return () => {
+            unregisterElementTrackingCallback(updateElementState);
+        };
     }, [updateElementState]);
 
     return {
         elementState,
         refCallback,
-        useElementTrackingCallback
+        registerElementTrackingCallback,
+        unregisterElementTrackingCallback
     };
 }
 
@@ -57,11 +63,7 @@ export const useElementTracking = (
 
     const [elementRef, setElementRef] = useState<HTMLElement>(null!);
     const elementState = useRef<Partial<IElementState>>({});
-    const elementTrackingCallback = useRef<TrackedElementCallback>(null!);
-
-    const useElementTrackingCallback = useCallback((newCallback: TrackedElementCallback) => {
-        elementTrackingCallback.current = newCallback;
-    }, []);
+    const [registerElementTrackingCallback, unregisterElementTrackingCallback, elementTrackingCallbacks] = useRegisteredCallbacks<TrackedElementCallback>([])
 
     const getElementProps = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
         return getNewProp.reduce((propObj, nextPropName) => {
@@ -104,7 +106,16 @@ export const useElementTracking = (
         element && setElementRef(element);
     }, []);
 
-    const throttledUpdateCallback = throttle(interval, (getNewProp: Extract<keyof IElementState, string>[]) => elementTrackingCallback.current && elementTrackingCallback.current(getElementProps(getNewProp)));
+    const updateCallback = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
+
+        elementTrackingCallbacks.current.map(elementTrackingCallback =>
+            elementTrackingCallback(
+                getElementProps(getNewProp)
+            )
+        );
+    }, [elementTrackingCallbacks, getElementProps]);
+
+    const throttledUpdateCallback = throttle(interval, updateCallback);
 
     const scrollStateCallback = useCallback((newCurrentScroll?: number, newPreviousScroll?: number) => {
         if (!!newCurrentScroll) {
@@ -118,6 +129,9 @@ export const useElementTracking = (
 
     useEffect(() => {
         elementRef && throttledUpdateCallback(['top', 'bottom', 'height', 'left', "relativeBottom", 'relativeTop', 'right', 'width']);
+
+        return () => {
+        }
     }, [elementRef]);
 
     useEffect(() => {
@@ -134,7 +148,8 @@ export const useElementTracking = (
 
     return {
         elementState,
-        useElementTrackingCallback,
+        registerElementTrackingCallback,
+        unregisterElementTrackingCallback,
         refCallback,
     };
 }
