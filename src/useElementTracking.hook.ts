@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { bottomEdgeDistance, height, leftEdgeDistance, topEdgeDistance, rightEdgeDistance, width } from '@speaker-ender/js-measure';
-import { useThrottle } from '@react-hook/throttle';
-import { IWindowDimensions, useWindowContext } from './window.context';
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { bottomEdgeDistance, height, leftEdgeDistance, topEdgeDistance, rightEdgeDistance, width, rawWidth, rawHeight } from '@speaker-ender/js-measure';
+import { useWindowContext } from './window.context';
 import { useScrollContext } from '@speaker-ender/react-scrollr';
 import { useClientHook } from '@speaker-ender/react-ssr-tools';
+import { throttle } from 'throttle-debounce';
 
+const UPDATE_INTERVAL = 10;
 export interface IElementState {
     top: number,
     left: number,
@@ -16,102 +17,121 @@ export interface IElementState {
     height: number,
 }
 
-export type TrackedElementCallback = (elementState: IElementState) => void;
+export interface IElementTrackingOptions {
+    trackedProperties?: keyof IElementState,
+    updateInterval?: number;
+}
 
-export const useElementTracking = () => {
+export type TrackedElementCallback = (elementState: Partial<IElementState>) => void;
+
+export const useElementTrackingState = () => {
+    const { useElementTrackingCallback, refCallback } = useElementTracking();
+    const [elementState, setElementState] = useState<Partial<IElementState>>({});
+
+    const updateElementState = useCallback((newElementState: Partial<IElementState>) => {
+        setElementState({ ...elementState, ...newElementState });
+    }, [elementState, setElementState])
+
+    useEffect(() => {
+        useElementTrackingCallback(updateElementState)
+    }, [updateElementState]);
+
+    return {
+        elementState,
+        refCallback
+    };
+}
+
+export const useElementTracking = (
+    props?: {
+        trackedProperties?: keyof IElementState,
+        updateInterval?: number
+    }
+) => {
+    const interval = props?.updateInterval || UPDATE_INTERVAL;
+
     const isClientSide = useClientHook();
-    const { registerResizeCallback, unregisterResizeCallback, windowDimensions } = useWindowContext();
-    const { registerScrollCallback, unregisterScrollCallback, scrollState } = useScrollContext();
+    const { registerResizeCallback, unregisterResizeCallback } = useWindowContext();
+    const { registerScrollCallback, unregisterScrollCallback } = useScrollContext();
 
-    const [currentScrollState, setCurrentScrollState] = useState(scrollState.current);
-    const [currentWindowState, setCurrentWindowState] = useState(windowDimensions.current);
+    const [elementRef, setElementRef] = useState<HTMLElement>(null!);
+    const elementState = useRef<Partial<IElementState>>({});
+    const elementTrackingCallback = useRef<TrackedElementCallback>(null!);
 
-    const [elementRef, setElementRef] = useState<HTMLElement>();
-    const [elementState, setElementState] = useState<IElementState>(null!);
+    const useElementTrackingCallback = useCallback((newCallback: TrackedElementCallback) => {
+        elementTrackingCallback.current = newCallback;
+    }, []);
 
-    const trackedElementCallbacks = useRef<TrackedElementCallback[]>([]);
-
-    const registerTrackedElementCallback = useCallback(
-        (trackedElementCallback: TrackedElementCallback) => {
-            trackedElementCallbacks.current = ([...trackedElementCallbacks.current, trackedElementCallback]);
-        },
-        [trackedElementCallbacks.current]
-    );
-
-    const unregisterTrackedElementCallback = useCallback(
-        (trackedElementCallback: TrackedElementCallback) => {
-            trackedElementCallbacks.current = trackedElementCallbacks.current.filter(callback => callback !== trackedElementCallback);
-        },
-        [trackedElementCallbacks.current]
-    );
-
-    const getElementState = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
-        return !!elementRef && {
-            top: getNewProp.includes('top') ? topEdgeDistance(elementRef, 'document') : elementState.top,
-            left: getNewProp.includes('left') ? leftEdgeDistance(elementRef, 'viewport') : elementState.left,
-            bottom: getNewProp.includes('bottom') ? bottomEdgeDistance(elementRef, 'document') : elementState.bottom,
-            right: getNewProp.includes('right') ? rightEdgeDistance(elementRef, 'document') : elementState.right,
-            relativeTop: getNewProp.includes('relativeTop') ? topEdgeDistance(elementRef, 'viewport') : elementState.relativeTop,
-            relativeBottom: getNewProp.includes('relativeBottom') ? bottomEdgeDistance(elementRef, 'viewport') : elementState.relativeBottom,
-            width: getNewProp.includes('width') ? width(elementRef) : elementState.width,
-            height: getNewProp.includes('height') ? height(elementRef) : elementState.height,
-
-        }
+    const getElementProps = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
+        return getNewProp.reduce((propObj, nextPropName) => {
+            let newValue = 0;
+            switch (nextPropName) {
+                case 'top':
+                    newValue = topEdgeDistance(elementRef, 'document')
+                    break;
+                case 'left':
+                    newValue = leftEdgeDistance(elementRef, 'viewport')
+                    break;
+                case 'bottom':
+                    newValue = bottomEdgeDistance(elementRef, 'document')
+                    break;
+                case 'right':
+                    newValue = rightEdgeDistance(elementRef, 'viewport')
+                    break;
+                case 'relativeTop':
+                    newValue = topEdgeDistance(elementRef, 'viewport')
+                    break;
+                case 'relativeBottom':
+                    newValue = bottomEdgeDistance(elementRef, 'viewport')
+                    break;
+                case 'width':
+                    newValue = rawWidth(elementRef)
+                    break;
+                case 'height':
+                    newValue = rawHeight(elementRef)
+                    break;
+            }
+            propObj[nextPropName] = newValue;
+            return propObj
+        }, {} as Partial<IElementState>)
     }, [elementRef, elementState]);
 
-    const updateElementState = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
-        const newElementState = getElementState(getNewProp);
-        if (newElementState) {
-            trackedElementCallbacks.current.map(trackedElementCallback =>
-                trackedElementCallback(
-                    newElementState
-                )
-            );
-            newElementState && setElementState(newElementState);
-        }
-    }, [setElementState, elementRef, getElementState]);
 
-    const updateElementRef = useCallback((element: HTMLElement) => {
-        setElementRef(element);
-    }, [setElementRef]);
+    const refCallback = useCallback((element: HTMLElement) => {
+        element && setElementRef(element);
+    }, []);
 
-    // Updating relevant measurements when window is resized
-    useEffect(() => {
-        updateElementState(['width', 'height', 'top', 'left', 'bottom', 'right', 'relativeBottom', 'relativeTop']);
-    }, [currentWindowState && currentWindowState.width, currentWindowState && currentWindowState.height]);
+    const throttledUpdateCallback = throttle(interval, (getNewProp: Extract<keyof IElementState, string>[]) => elementTrackingCallback.current && elementTrackingCallback.current(getElementProps(getNewProp)));
 
-    // Updating relevant measurements when scrolling
-    useEffect(() => {
-        updateElementState(['relativeTop', 'relativeBottom']);
-    }, [currentScrollState && currentScrollState.currentPosition]);
-
-    const updateScrollState = useCallback((newCurrentScroll?: number, newPreviousScroll?: number) => {
+    const scrollStateCallback = useCallback((newCurrentScroll?: number, newPreviousScroll?: number) => {
         if (!!newCurrentScroll) {
-            setCurrentScrollState({
-                currentPosition: newCurrentScroll,
-                prevPosition: newPreviousScroll
-            })
+            throttledUpdateCallback(['relativeTop', 'relativeBottom']);
         }
-    }, [setCurrentScrollState]);
+    }, [throttledUpdateCallback]);
 
-    const updateWindowState = useCallback((newHeight: number, newWidth: number) => {
-        setCurrentWindowState({
-            width: newHeight,
-            height: newWidth
-        });
-    }, [setCurrentWindowState]);
+    const windowStateCallback = useCallback((newHeight: number, newWidth: number) => {
+        throttledUpdateCallback(['width', 'height', 'top', 'left', 'bottom', 'right', 'relativeBottom', 'relativeTop']);
+    }, [throttledUpdateCallback]);
 
     useEffect(() => {
-        registerScrollCallback(updateScrollState);
-        registerResizeCallback(updateWindowState);
-        updateElementState(['top', 'bottom', 'height', 'left', "relativeBottom", 'relativeTop', 'right', 'width']);
+        elementRef && throttledUpdateCallback(['top', 'bottom', 'height', 'left', "relativeBottom", 'relativeTop', 'right', 'width']);
+    }, [elementRef]);
 
+    useEffect(() => {
+        if (!!isClientSide) {
+            registerScrollCallback(scrollStateCallback);
+            registerResizeCallback(windowStateCallback);
+        }
 
         return () => {
-            unregisterScrollCallback(updateScrollState);
-            unregisterResizeCallback(updateWindowState);
+            unregisterScrollCallback(scrollStateCallback);
+            unregisterResizeCallback(windowStateCallback);
         };
     }, [isClientSide]);
 
-    return { elementState, updateElementState, updateElementRef, elementRef, registerTrackedElementCallback, unregisterTrackedElementCallback };
+    return {
+        elementState,
+        useElementTrackingCallback,
+        refCallback,
+    };
 }

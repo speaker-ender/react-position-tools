@@ -4,7 +4,7 @@ import { Header2 } from '../../global/typography';
 import { StyledPage } from '../../global/page.styles';
 import WindowInfo from '../../components/window/windowInfo';
 
-const CursorDemo: NextPage = () => {
+const WindowContextDemo: NextPage = () => {
 
     return (
         <StyledPage>
@@ -16,4 +16,4 @@ const CursorDemo: NextPage = () => {
     )
 }
 
-export default CursorDemo
+export default WindowContextDemo

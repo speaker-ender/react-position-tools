@@ -3,16 +3,10 @@ import ImageComponent from '../../components/content/image';
 import { StyledPanel } from '../../global/panel.styles';
 import { Header2, Header4, Paragraph } from '../../global/typography';
 import { StyledPage } from '../../global/page.styles';
-import { useElementTracking } from '../../../src/index';
-import DebugPanel from '../../components/interface/debugPanel';
-import { useCallback } from 'react';
+import { useElementTrackingState } from '../../../src/useElementTracking.hook';
 
 const TrackedElementDemo: NextPage = () => {
-    const { updateElementRef, elementState } = useElementTracking();
-
-    const refCallback = useCallback((element: HTMLElement) => {
-        updateElementRef(element);
-    }, [])
+    const { refCallback, elementState } = useElementTrackingState();
 
     return (
         <StyledPage>
@@ -21,7 +15,7 @@ const TrackedElementDemo: NextPage = () => {
                 <Header4>Directions</Header4>
             </StyledPanel>
             <ImageComponent refCallback={refCallback} />
-            <DebugPanel defaultOpen={true}>
+            <StyledPanel>
                 <Header4>Element Properties</Header4>
                 <Paragraph>{`topPosition(): ${elementState && elementState.top}px`}</Paragraph>
                 <Paragraph>{`relativeTopPosition(): ${elementState && elementState.relativeTop}px`}</Paragraph>
@@ -31,7 +25,7 @@ const TrackedElementDemo: NextPage = () => {
                 <Paragraph>{`right(): ${elementState && elementState.right}px`}</Paragraph>
                 <Paragraph>{`width(): ${elementState && elementState.width}px`}</Paragraph>
                 <Paragraph>{`height(): ${elementState && elementState.height}px`}</Paragraph>
-            </DebugPanel>
+            </StyledPanel>
         </StyledPage >
     )
 }
