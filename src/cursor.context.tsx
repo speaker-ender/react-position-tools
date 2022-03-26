@@ -1,10 +1,13 @@
-import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
-import { useClientHook } from '@speaker-ender/react-ssr-tools';
+import React, { createContext, useCallback } from 'react';
 import { useThrottle } from '@react-hook/throttle';
-import { throttle } from 'throttle-debounce';
 import { useRegisteredCallbacks, useThrottledEventCallback } from './helpers/hooks';
 
-const LISTENER_INTERVAL = 10;
+const CURSOR_INTERVAL = 10;
+
+export type ICursorOptions = {
+    listenerInterval: number;
+    stateInterval: number;
+}
 
 export type ICursorState = ReturnType<typeof useCursorState>;
 
@@ -22,10 +25,12 @@ export interface ICursorPositionState {
     previousPosition?: IPos
 }
 
+export interface IScrollContextProvider extends Partial<ICursorOptions> { }
+
 export type CursorCallback = (currentPosition?: IPos, previousPosition?: IPos) => void;
 
-export const useCursorState = () => {
-    const [cursorPosition, setCursorPosition] = useThrottle<ICursorPositionState>({ currentPosition: { x: 0, y: 0 } }, LISTENER_INTERVAL);
+export const useCursorState = ({ listenerInterval, stateInterval }: ICursorOptions) => {
+    const [cursorPosition, setCursorPosition] = useThrottle<ICursorPositionState>({ currentPosition: { x: 0, y: 0 } }, stateInterval);
     const [registerCursorCallback, unregisterCursorCallback, cursorCallbacks] = useRegisteredCallbacks<CursorCallback>([])
 
     const handleCursorEvent = useCallback((event?: PointerEvent) => {
@@ -46,7 +51,7 @@ export const useCursorState = () => {
         }
     }, [cursorPosition.currentPosition, setCursorPosition, cursorCallbacks.current]);
 
-    useThrottledEventCallback('pointermove', LISTENER_INTERVAL, handleCursorEvent);
+    useThrottledEventCallback('pointermove', listenerInterval, handleCursorEvent);
 
     return {
         cursorPosition,
@@ -67,8 +72,8 @@ export const useCursorContext = () => {
     return cursorContext;
 };
 
-export const CursorContextProvider: React.FC = (props) => {
-    const cursorState = useCursorState();
+export const CursorContextProvider: React.FC<IScrollContextProvider> = (props) => {
+    const cursorState = useCursorState({ listenerInterval: CURSOR_INTERVAL, stateInterval: CURSOR_INTERVAL, ...props });
 
     return (
         <CursorContext.Provider value={cursorState}>

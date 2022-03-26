@@ -1,14 +1,14 @@
 import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import { windowWidth, windowHeight } from '@speaker-ender/js-measure';
 import { throttle } from 'throttle-debounce';
-import { useClientHook, useEventCallback } from '@speaker-ender/react-ssr-tools';
+import { useClientHook } from '@speaker-ender/react-ssr-tools';
 import { useRegisteredCallbacks, useThrottledEventCallback } from './helpers/hooks';
 
 const LISTENER_INTERVAL = 10;
 
 export type IWindowOptions = {
-    resizeUpdateStateInterval: number;
-    resizeCallbackInterval: number;
+    stateInterval: number;
+    listenerInterval: number;
 }
 
 export type IWindowState = ReturnType<typeof useWindowState>;
@@ -31,13 +31,13 @@ const selectWindowDimensions = (): IWindowDimensions => {
 
 export type ResizeCallback = (height: number, width: number) => void;
 
-export const useWindowState = ({ resizeUpdateStateInterval, resizeCallbackInterval }: IWindowOptions) => {
+export const useWindowState = ({ stateInterval, listenerInterval }: IWindowOptions) => {
     const isClientSide = useClientHook();
     const $html = React.useRef<HTMLElement | null>(null);
     const windowDimensions = useRef<IWindowDimensions>(selectWindowDimensions());
     const [registerResizeCallback, unregisterResizeCallback, resizeCallbacks] = useRegisteredCallbacks<ResizeCallback>([])
 
-    const throttledSetWindowDimensions = throttle(resizeUpdateStateInterval, (newWindowDimensions) => windowDimensions.current = newWindowDimensions);
+    const throttledSetWindowDimensions = throttle(stateInterval, (newWindowDimensions) => windowDimensions.current = newWindowDimensions);
 
     const handleResizeEvent = useCallback(() => {
         const newWindowDimensions = selectWindowDimensions();
@@ -52,7 +52,7 @@ export const useWindowState = ({ resizeUpdateStateInterval, resizeCallbackInterv
         throttledSetWindowDimensions(newWindowDimensions);
     }, [windowDimensions.current, resizeCallbacks]);
 
-    useThrottledEventCallback('resize', resizeCallbackInterval, handleResizeEvent);
+    useThrottledEventCallback('resize', listenerInterval, handleResizeEvent);
 
     useEffect(() => {
         $html.current = document.documentElement;
@@ -79,7 +79,7 @@ export const useWindowContext = () => {
 };
 
 export const WindowContextProvider: React.FC<IWindowContextProvider> = (props) => {
-    const windowState = useWindowState({ resizeUpdateStateInterval: LISTENER_INTERVAL, resizeCallbackInterval: LISTENER_INTERVAL, ...props });
+    const windowState = useWindowState({ stateInterval: LISTENER_INTERVAL, listenerInterval: LISTENER_INTERVAL, ...props });
 
 
     return (

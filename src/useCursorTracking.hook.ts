@@ -11,7 +11,7 @@ export interface ICursorTrackingState {
 export const useCursorTracking = () => {
     const isClientSide = useClientHook();
     const { registerCursorCallback, unregisterCursorCallback, cursorPosition } = useCursorContext();
-    const { refCallback, elementState } = useElementTrackingState();
+    const { refCallback, elementState } = useElementTrackingState({ trackedProperties: ['width', 'height', 'left', 'relativeTop'] });
     const currentCursorPosition = useRef(cursorPosition.currentPosition || { x: 0, y: 0 });
     const [relativeCursorPosition, setRelativeCursorPosition] = useState<ICursorTrackingState>({
         pixels: cursorPosition.currentPosition || { x: 0, y: 0 },

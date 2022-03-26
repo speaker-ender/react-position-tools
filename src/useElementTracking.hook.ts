@@ -1,5 +1,5 @@
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
-import { bottomEdgeDistance, height, leftEdgeDistance, topEdgeDistance, rightEdgeDistance, width, rawWidth, rawHeight } from '@speaker-ender/js-measure';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { bottomEdgeDistance, leftEdgeDistance, topEdgeDistance, rightEdgeDistance, rawWidth, rawHeight } from '@speaker-ender/js-measure';
 import { useWindowContext } from './window.context';
 import { useScrollContext } from '@speaker-ender/react-scrollr';
 import { useClientHook } from '@speaker-ender/react-ssr-tools';
@@ -7,7 +7,7 @@ import { throttle } from 'throttle-debounce';
 import { useRegisteredCallbacks } from './helpers/hooks';
 
 const UPDATE_INTERVAL = 10;
-export interface IElementState {
+export type IElementState = {
     top: number,
     left: number,
     bottom: number,
@@ -18,15 +18,20 @@ export interface IElementState {
     height: number,
 }
 
+const defaultScrollDependantAttributes: (keyof IElementState)[] = ['relativeTop', 'relativeBottom'];
+const defaultResizeDependantAttributes: (keyof IElementState)[] = ['width', 'height', 'top', 'left', 'bottom', 'right', ...defaultScrollDependantAttributes];
+
 export interface IElementTrackingOptions {
-    trackedProperties?: keyof IElementState,
+    trackedProperties?: (keyof IElementState)[],
     updateInterval?: number;
 }
 
 export type TrackedElementCallback = (elementState: Partial<IElementState>) => void;
 
-export const useElementTrackingState = () => {
-    const { registerElementTrackingCallback, unregisterElementTrackingCallback, refCallback } = useElementTracking();
+export const useElementTrackingState = (
+    props?: IElementTrackingOptions
+) => {
+    const { registerElementTrackingCallback, unregisterElementTrackingCallback, refCallback } = useElementTracking(props);
     const [elementState, setElementState] = useState<Partial<IElementState>>({});
 
     const updateElementState = useCallback((newElementState: Partial<IElementState>) => {
@@ -50,14 +55,14 @@ export const useElementTrackingState = () => {
 }
 
 export const useElementTracking = (
-    props?: {
-        trackedProperties?: keyof IElementState,
-        updateInterval?: number
-    }
+    props?: IElementTrackingOptions
 ) => {
     const interval = props?.updateInterval || UPDATE_INTERVAL;
-
     const isClientSide = useClientHook();
+
+    const scrollDependantAttributes = props?.trackedProperties ? defaultScrollDependantAttributes.filter((attribute) => props.trackedProperties?.includes(attribute)) : defaultScrollDependantAttributes;
+    const resizeDependantAttributes = props?.trackedProperties ? defaultResizeDependantAttributes.filter((attribute) => props.trackedProperties?.includes(attribute)) : defaultResizeDependantAttributes;
+
     const { registerResizeCallback, unregisterResizeCallback } = useWindowContext();
     const { registerScrollCallback, unregisterScrollCallback } = useScrollContext();
 
@@ -119,16 +124,16 @@ export const useElementTracking = (
 
     const scrollStateCallback = useCallback((newCurrentScroll?: number, newPreviousScroll?: number) => {
         if (!!newCurrentScroll) {
-            throttledUpdateCallback(['relativeTop', 'relativeBottom']);
+            throttledUpdateCallback(scrollDependantAttributes);
         }
     }, [throttledUpdateCallback]);
 
     const windowStateCallback = useCallback((newHeight: number, newWidth: number) => {
-        throttledUpdateCallback(['width', 'height', 'top', 'left', 'bottom', 'right', 'relativeBottom', 'relativeTop']);
+        throttledUpdateCallback(resizeDependantAttributes);
     }, [throttledUpdateCallback]);
 
     useEffect(() => {
-        elementRef && throttledUpdateCallback(['top', 'bottom', 'height', 'left', "relativeBottom", 'relativeTop', 'right', 'width']);
+        elementRef && throttledUpdateCallback(resizeDependantAttributes);
 
         return () => {
         }
@@ -136,7 +141,7 @@ export const useElementTracking = (
 
     useEffect(() => {
         if (!!isClientSide) {
-            registerScrollCallback(scrollStateCallback);
+            scrollDependantAttributes.length > 0 && registerScrollCallback(scrollStateCallback);
             registerResizeCallback(windowStateCallback);
         }
 
