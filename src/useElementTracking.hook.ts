@@ -38,7 +38,8 @@ export const useElementTrackingState = () => {
 
     return {
         elementState,
-        refCallback
+        refCallback,
+        useElementTrackingCallback
     };
 }
 
@@ -65,31 +66,33 @@ export const useElementTracking = (
     const getElementProps = useCallback((getNewProp: Extract<keyof IElementState, string>[]) => {
         return getNewProp.reduce((propObj, nextPropName) => {
             let newValue = 0;
-            switch (nextPropName) {
-                case 'top':
-                    newValue = topEdgeDistance(elementRef, 'document')
-                    break;
-                case 'left':
-                    newValue = leftEdgeDistance(elementRef, 'viewport')
-                    break;
-                case 'bottom':
-                    newValue = bottomEdgeDistance(elementRef, 'document')
-                    break;
-                case 'right':
-                    newValue = rightEdgeDistance(elementRef, 'viewport')
-                    break;
-                case 'relativeTop':
-                    newValue = topEdgeDistance(elementRef, 'viewport')
-                    break;
-                case 'relativeBottom':
-                    newValue = bottomEdgeDistance(elementRef, 'viewport')
-                    break;
-                case 'width':
-                    newValue = rawWidth(elementRef)
-                    break;
-                case 'height':
-                    newValue = rawHeight(elementRef)
-                    break;
+            if (elementRef) {
+                switch (nextPropName) {
+                    case 'top':
+                        newValue = topEdgeDistance(elementRef, 'document')
+                        break;
+                    case 'left':
+                        newValue = leftEdgeDistance(elementRef, 'viewport')
+                        break;
+                    case 'bottom':
+                        newValue = bottomEdgeDistance(elementRef, 'document')
+                        break;
+                    case 'right':
+                        newValue = rightEdgeDistance(elementRef, 'viewport')
+                        break;
+                    case 'relativeTop':
+                        newValue = topEdgeDistance(elementRef, 'viewport')
+                        break;
+                    case 'relativeBottom':
+                        newValue = bottomEdgeDistance(elementRef, 'viewport')
+                        break;
+                    case 'width':
+                        newValue = rawWidth(elementRef)
+                        break;
+                    case 'height':
+                        newValue = rawHeight(elementRef)
+                        break;
+                }
             }
             propObj[nextPropName] = newValue;
             return propObj
@@ -97,7 +100,7 @@ export const useElementTracking = (
     }, [elementRef, elementState]);
 
 
-    const refCallback = useCallback((element: HTMLElement) => {
+    const refCallback = useCallback((element: HTMLElement | null) => {
         element && setElementRef(element);
     }, []);
 

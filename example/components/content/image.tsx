@@ -7,18 +7,13 @@ import { MutableRefObject, useEffect } from "react";
 interface IImageComponent {
     style?: React.CSSProperties;
     coloredBackground?: boolean;
-    refCallback?: (imageRef: HTMLDivElement) => void;
+    refCallback?: (element: HTMLElement | null) => void;
 }
 
 const ImageComponent: React.FC<IImageComponent> = (props) => {
-    const imageRef = React.useRef() as MutableRefObject<HTMLDivElement>;
-
-    useEffect(() => {
-        imageRef.current && props.refCallback && props.refCallback(imageRef.current);
-    }, [imageRef])
 
     return (
-        <StyledImage style={props.style} coloredBackground={props.coloredBackground} ref={imageRef}>
+        <StyledImage style={props.style} coloredBackground={props.coloredBackground} ref={props.refCallback}>
             <Image src={enderImage} layout="responsive" alt="image"></Image>
         </StyledImage>
     )

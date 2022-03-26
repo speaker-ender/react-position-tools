@@ -14,7 +14,7 @@ interface ICursorParalax {
 }
 
 const CursorParalax: React.FC<ICursorParalax> = (props) => {
-    const { pixels, percent, updateRelativeElement } = useCursorTracking();
+    const { pixels, percent, refCallback } = useCursorTracking();
     const isActive = useIsCursorActive();
     const [isHover, setIsHover] = useState(false);
     const imageWrapperRef = useRef() as MutableRefObject<HTMLDivElement>;
@@ -29,14 +29,6 @@ const CursorParalax: React.FC<ICursorParalax> = (props) => {
             setIsHover(newIsHover);
         }
     }, [isHover, setIsHover, getIsHover]);
-
-    useEffect(() => {
-        imageWrapperRef.current && updateRelativeElement(imageWrapperRef.current);
-
-        return () => {
-
-        }
-    }, [imageWrapperRef.current]);
 
     useEffect(() => {
         updateIsHover();
@@ -73,7 +65,7 @@ const CursorParalax: React.FC<ICursorParalax> = (props) => {
                     transform: isHover ? `rotateY(${getOffsetXPercent(percent.x) * 8}deg) rotateX(${getOffsetYPercent(percent.y) * 8}deg) translate3d( 0, -2px, 0 )` : 'rotateY(0deg) rotateX(0deg)'
                 }}
 
-                ref={imageWrapperRef}
+                ref={refCallback}
             >
                 <ImageComponent style={{
                     backgroundPosition: isHover ? `${(percent.x / 1.5 + 25).toPrecision(3)}% ${(percent.y / 1.5 + 25).toPrecision(3)}%` : '',

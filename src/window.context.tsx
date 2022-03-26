@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useEffect, useRef, useState } from '
 import { windowWidth, windowHeight } from '@speaker-ender/js-measure';
 import { throttle } from 'throttle-debounce';
 import { useClientHook, useEventCallback } from '@speaker-ender/react-ssr-tools';
+import { useRegisteredCallbacks, useThrottledEventCallback } from './helpers/hooks';
 
 const LISTENER_INTERVAL = 10;
 
@@ -34,25 +35,11 @@ export const useWindowState = ({ resizeUpdateStateInterval, resizeCallbackInterv
     const isClientSide = useClientHook();
     const $html = React.useRef<HTMLElement | null>(null);
     const windowDimensions = useRef<IWindowDimensions>(selectWindowDimensions());
-    const resizeCallbacks = useRef<ResizeCallback[]>([]);
-
-    const registerResizeCallback = useCallback(
-        (resizeCallback: ResizeCallback) => {
-            resizeCallbacks.current = ([...resizeCallbacks.current, resizeCallback]);
-        },
-        [resizeCallbacks.current]
-    );
-
-    const unregisterResizeCallback = useCallback(
-        (resizeCallback: ResizeCallback) => {
-            resizeCallbacks.current = resizeCallbacks.current.filter(callback => callback !== resizeCallback);
-        },
-        [resizeCallbacks.current]
-    );
+    const [registerResizeCallback, unregisterResizeCallback, resizeCallbacks] = useRegisteredCallbacks<ResizeCallback>([])
 
     const throttledSetWindowDimensions = throttle(resizeUpdateStateInterval, (newWindowDimensions) => windowDimensions.current = newWindowDimensions);
 
-    const handleResizeEvent = useEventCallback(() => {
+    const handleResizeEvent = useCallback(() => {
         const newWindowDimensions = selectWindowDimensions();
 
         resizeCallbacks.current.map(resizeCallback =>
@@ -65,16 +52,10 @@ export const useWindowState = ({ resizeUpdateStateInterval, resizeCallbackInterv
         throttledSetWindowDimensions(newWindowDimensions);
     }, [windowDimensions.current, resizeCallbacks]);
 
-    const throttledResizeEvent = throttle(resizeCallbackInterval, handleResizeEvent);
+    useThrottledEventCallback('resize', resizeCallbackInterval, handleResizeEvent);
 
     useEffect(() => {
         $html.current = document.documentElement;
-
-        !!isClientSide && window.addEventListener('resize', throttledResizeEvent);
-
-        return () => {
-            window.removeEventListener('resize', throttledResizeEvent);
-        };
     }, [isClientSide]);
 
     return {
