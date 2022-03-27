@@ -7,7 +7,7 @@
         "dist"
     ],
     "description": "React Position Tools For HTML Elements",
-    "version": "v0.1.5",
+    "version": "v0.1.6",
     "author": "3nder",
     "devDependencies": {
         "@speaker-ender/js-measure": "0.2.2",
