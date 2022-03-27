@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
 import FunctionLayout from '../../components/layouts/documentation/function.layout';
 
-const useElementTrackingPage: NextPage = () => {
+const useElementTrackingStatePage: NextPage = () => {
 
     return (
-        <FunctionLayout functionName='useElementTracking'
+        <FunctionLayout functionName='useElementTrackingState'
             description={[]}
             parameters={[
                 {
@@ -22,4 +22,4 @@ const useElementTrackingPage: NextPage = () => {
     )
 }
 
-export default useElementTrackingPage
+export default useElementTrackingStatePage

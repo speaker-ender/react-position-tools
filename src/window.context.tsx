@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useRef } from 'react';
 import { windowWidth, windowHeight } from '@speaker-ender/js-measure';
 import { throttle } from 'throttle-debounce';
 import { useClientHook } from '@speaker-ender/react-ssr-tools';

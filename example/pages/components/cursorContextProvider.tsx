@@ -4,7 +4,21 @@ import ComponentLayout from '../../components/layouts/documentation/component.la
 const CursorContextProviderPage: NextPage = () => {
 
     return (
-        <ComponentLayout componentName='CursorContextProvider' description={[]} />
+        <ComponentLayout componentName='CursorContextProvider'
+            description={[]}
+            parameters={[
+                {
+                    name: "listenerInterval",
+                    type: "number",
+                    optional: true
+                },
+                {
+                    name: "stateInterval",
+                    type: "number",
+                    optional: true
+                },
+            ]}
+        />
     )
 }
 
