@@ -7,10 +7,9 @@
         "dist"
     ],
     "description": "React Position Tools For HTML Elements",
-    "version": "v0.1.4",
+    "version": "v0.1.5",
     "author": "3nder",
     "devDependencies": {
-        "@react-hook/throttle": "^2.2.0",
         "@speaker-ender/js-measure": "0.2.2",
         "@speaker-ender/react-ssr-tools": "^0.1.3",
         "@speaker-ender/react-scrollr": "^0.1.3",

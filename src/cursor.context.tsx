@@ -1,6 +1,6 @@
-import React, { createContext, useCallback } from 'react';
-import { useThrottle } from '@react-hook/throttle';
+import React, { createContext, useCallback, useState } from 'react';
 import { useRegisteredCallbacks, useThrottledEventCallback } from './helpers/hooks';
+import { throttle } from 'throttle-debounce';
 
 const CURSOR_INTERVAL = 10;
 
@@ -30,8 +30,10 @@ export interface IScrollContextProvider extends Partial<ICursorOptions> { }
 export type CursorCallback = (currentPosition?: IPos, previousPosition?: IPos) => void;
 
 export const useCursorState = ({ listenerInterval, stateInterval }: ICursorOptions) => {
-    const [cursorPosition, setCursorPosition] = useThrottle<ICursorPositionState>({ currentPosition: { x: 0, y: 0 } }, stateInterval);
+    const [cursorPosition, setCursorPosition] = useState<ICursorPositionState>({ currentPosition: { x: 0, y: 0 } });
     const [registerCursorCallback, unregisterCursorCallback, cursorCallbacks] = useRegisteredCallbacks<CursorCallback>([])
+
+    const throttledSetCursorPosition = throttle(stateInterval, setCursorPosition);
 
     const handleCursorEvent = useCallback((event?: PointerEvent) => {
         if (event) {
@@ -44,12 +46,12 @@ export const useCursorState = ({ listenerInterval, stateInterval }: ICursorOptio
                 )
             );
 
-            setCursorPosition({
+            throttledSetCursorPosition({
                 currentPosition: newCursorState,
                 previousPosition: cursorPosition.previousPosition
             });
         }
-    }, [cursorPosition.currentPosition, setCursorPosition, cursorCallbacks.current]);
+    }, [cursorPosition.currentPosition, throttledSetCursorPosition, cursorCallbacks.current]);
 
     useThrottledEventCallback('pointermove', listenerInterval, handleCursorEvent);
 
