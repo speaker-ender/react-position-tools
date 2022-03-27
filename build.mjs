@@ -9,7 +9,7 @@ const sharedBuildProps = {
     minify: true,
     sourcemap: true,
     plugins: [nodeExternalsPlugin({
-        allowList: ['throttle-debounce']
+        allowList: ['throttle-debounce', '@speaker-ender/react-scrollr']
     })],
 };
 
