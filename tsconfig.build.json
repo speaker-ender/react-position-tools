@@ -15,8 +15,5 @@
         "example",
         "dist",
         "./build.mjs"
-    ],
-    "include": [
-        "node_modules/@speaker-ender/react-scrollr"
     ]
 }
