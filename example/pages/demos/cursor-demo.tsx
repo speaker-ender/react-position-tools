@@ -8,8 +8,8 @@ import { useCallback, useState } from 'react';
 import { StyledCursorContainer } from '../../components/cursor/cursor-demo.styles';
 import { StyledImageGrid } from '../../components/content/imageGrid.styles';
 import CursorParalax from '../../components/cursor/cursorParalax';
-import { IPos } from '../../../src/cursor.context';
-import { ICursorTrackingState } from '../../../src/useCursorTracking.hook';
+import { IPos } from '@speaker-ender/react-position-tools/dist/cursor.context';
+import { ICursorTrackingState } from '@speaker-ender/react-position-tools/dist/useCursorTracking.hook';
 
 const CursorDemo: NextPage = () => {
     const { cursorPosition } = useCursorContext();

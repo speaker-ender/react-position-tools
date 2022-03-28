@@ -11,9 +11,9 @@ export type IWindowOptions = {
     listenerInterval: number;
 }
 
-export type IWindowState = ReturnType<typeof useWindowState>;
+export type IWindowState = Partial<ReturnType<typeof useWindowState>>;
 
-export const WindowContext = createContext<IWindowState>(null!);
+export const WindowContext = createContext<IWindowState | null>(null);
 
 export interface IWindowContextProvider extends Partial<IWindowOptions> { }
 
@@ -79,6 +79,7 @@ export const useWindowContext = () => {
 };
 
 export const WindowContextProvider: React.FC<IWindowContextProvider> = (props) => {
+    console.log('window context provider should be here');
     const windowState = useWindowState({ stateInterval: LISTENER_INTERVAL, listenerInterval: LISTENER_INTERVAL, ...props });
 
 

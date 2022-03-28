@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useWindowContext } from "../../../src";
-import { IWindowDimensions } from "../../../src/window.context";
+import { useWindowContext } from "@speaker-ender/react-position-tools";
+import { IWindowDimensions } from "@speaker-ender/react-position-tools/dist/window.context";
 import { Header4 } from "../../global/typography";
 import ParagraphComponent from "../content/paragraph";
 
@@ -15,7 +15,7 @@ const WindowInfo: React.FC = (props) => {
 
     useEffect(() => {
         registerResizeCallback && registerResizeCallback(resizeCallback);
-        setWindowState(windowDimensions.current);
+        windowDimensions && setWindowState(windowDimensions.current);
 
         return () => {
             unregisterResizeCallback && unregisterResizeCallback(resizeCallback);

@@ -67,7 +67,7 @@ export const useCursorContext = () => {
 
     if (!cursorContext) {
         throw new Error(
-            'NavMeta Context used outside of NavMetaContext.Provider'
+            'Cursor Context used outside of CursorContext.Provider'
         );
     }
 

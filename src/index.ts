@@ -17,3 +17,5 @@ export {
     useCursorTracking,
     useIsCursorActive
 } from './useCursorTracking.hook';
+
+export { ScrollContextProvider } from "@speaker-ender/react-scrollr";

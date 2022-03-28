@@ -14,7 +14,7 @@ import { StyledNotificationTray, StyledNotificationWrapper } from "../components
 import { useClientHook } from "@speaker-ender/react-ssr-tools";
 import WindowInfo from "../components/window/windowInfo";
 import { ScrollContextProvider } from "@speaker-ender/react-scrollr";
-import { CursorContextProvider, WindowContextProvider } from "../../src";
+import { CursorContextProvider, WindowContextProvider } from "@speaker-ender/react-position-tools";
 
 const DynamicBannerMessage = dynamic(() => import('../components/interface/bannerMessage'), {
     ssr: false,

@@ -142,12 +142,12 @@ export const useElementTracking = (
     useEffect(() => {
         if (!!isClientSide) {
             scrollDependantAttributes.length > 0 && registerScrollCallback(scrollStateCallback);
-            registerResizeCallback(windowStateCallback);
+            registerResizeCallback && registerResizeCallback(windowStateCallback);
         }
 
         return () => {
             unregisterScrollCallback(scrollStateCallback);
-            unregisterResizeCallback(windowStateCallback);
+            unregisterResizeCallback && unregisterResizeCallback(windowStateCallback);
         };
     }, [isClientSide]);
 
