@@ -2,7 +2,7 @@
     "name": "@speaker-ender/react-position-tools",
     "author": "3nder",
     "description": "React Position Tools For HTML Elements",
-    "version": "v0.1.10",
+    "version": "v0.1.11",
     "main": "dist/index.cjs.js",
     "module": "dist/index.esm.js",
     "types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
     ],
     "dependencies": {
         "@speaker-ender/js-measure": "0.2.2",
-        "@speaker-ender/react-scrollr": "^0.1.6",
+        "@speaker-ender/react-scrollr": "^0.1.7",
         "@speaker-ender/react-ssr-tools": "^0.1.3",
         "throttle-debounce": "^3.0.1"
     },
