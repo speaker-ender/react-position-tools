@@ -1,11 +1,9 @@
 import * as React from "react";
-import { StyledCursorContainer } from "./cursor-demo.styles";
 import ImageComponent from "../content/image";
-// import { useCursorTracking, useIsCursorActive, useCursorContext } from '../../../src/index';
-import { useCursorTracking, useIsCursorActive } from '../../../dist/index.esm'
+import { useCursorTracking, useIsCursorActive } from '@speaker-ender/react-position-tools'
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { StyledCursorParalax, StyledCursorParalaxWrapper } from "./cursorParalax.styles";
-import { IPos } from "../../../src/cursor.context";
+import { IPos } from "@speaker-ender/react-position-tools/dist/cursor.context";
 import { Paragraph } from "../../global/typography";
 
 interface ICursorParalax {

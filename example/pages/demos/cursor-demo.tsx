@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { StyledPanel } from '../../global/panel.styles';
 import { Header2, Header4, Header5, Paragraph } from '../../global/typography';
 import { StyledPage } from '../../global/page.styles';
-import { useIsCursorActive, useCursorContext } from '../../../src/index';
+import { useIsCursorActive, useCursorContext } from '@speaker-ender/react-position-tools';
 import DebugPanel from '../../components/interface/debugPanel';
 import { useCallback, useState } from 'react';
 import { StyledCursorContainer } from '../../components/cursor/cursor-demo.styles';

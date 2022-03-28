@@ -3,7 +3,7 @@ import ImageComponent from '../../components/content/image';
 import { StyledPanel } from '../../global/panel.styles';
 import { Header2, Header4, Paragraph } from '../../global/typography';
 import { StyledPage } from '../../global/page.styles';
-import { useElementTrackingState } from '../../../src/useElementTracking.hook';
+import { useElementTrackingState } from '@speaker-ender/react-position-tools';
 
 const TrackedElementDemo: NextPage = () => {
     const { refCallback, elementState } = useElementTrackingState();
