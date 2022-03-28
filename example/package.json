@@ -10,7 +10,7 @@
   "dependencies": {
     "@speaker-ender/js-measure": "^0.2.2",
     "@speaker-ender/react-scrollr": "^0.1.6",
-    "@speaker-ender/react-position-tools": "^0.1.8",
+    "@speaker-ender/react-position-tools": "^0.1.9",
     "@speaker-ender/react-ssr-tools": "^0.1.3",
     "next": "12.1.1",
     "react": "^17.0.2",

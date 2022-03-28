@@ -79,7 +79,6 @@ export const useWindowContext = () => {
 };
 
 export const WindowContextProvider: React.FC<IWindowContextProvider> = (props) => {
-    console.log('window context provider should be here');
     const windowState = useWindowState({ stateInterval: LISTENER_INTERVAL, listenerInterval: LISTENER_INTERVAL, ...props });
 
 

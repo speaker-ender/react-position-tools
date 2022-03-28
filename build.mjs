@@ -8,9 +8,7 @@ const sharedBuildProps = {
     logLevel: "info",
     minify: true,
     sourcemap: true,
-    plugins: [nodeExternalsPlugin({
-        allowList: ['throttle-debounce', '@speaker-ender/react-scrollr']
-    })],
+    plugins: [nodeExternalsPlugin()],
 };
 
 // ESM
