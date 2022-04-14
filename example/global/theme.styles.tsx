@@ -187,41 +187,6 @@ export const DARK_THEME: ITheme = {
   highlight: theme.colors.orange.noneOpacity,
 };
 
-export const setColorsByTheme = () => {
-  function getInitialColorMode() {
-    const siteState = window.localStorage.getItem("siteState");
-    const persistedColorPreference =
-      siteState && JSON.parse(siteState).state.themeStyle;
-    const hasPersistedPreference =
-      typeof persistedColorPreference === "string" &&
-      persistedColorPreference !== "";
-
-    if (hasPersistedPreference) {
-      return persistedColorPreference;
-    }
-
-    const mql = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const hasMediaQueryPreference = typeof mql.matches === "boolean";
-    if (hasMediaQueryPreference) {
-      return mql.matches ? "dark" : "light";
-    }
-
-    return "light";
-  }
-  const root = window.document.documentElement;
-
-  const colorMode = getInitialColorMode();
-  const COLORS = colorMode === "light" ? "LIGHT_THEME" : "DARK_THEME";
-  // Do stuff with `colors`, as if it was an object
-  // that held everything!
-  Object.entries(COLORS).forEach(([name, colorByTheme]) => {
-    const cssVarName = `--${name}`;
-    root.style.setProperty(cssVarName, colorByTheme);
-  });
-  root.style.setProperty("--initial-color-mode", colorMode);
-};
-
 export const getThemePropsString = (themeObject: ITheme) => {
   return (Object.keys(themeObject) as (keyof ITheme)[]).reduce(
     (themeString, current) => {

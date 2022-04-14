@@ -5,6 +5,8 @@ const nextConfig = {
   experimental: {
     externalDir: true,
     concurrentFeatures: true,
+    runtime: 'nodejs',
+    serverComponents: true,
   },
   compiler: {
     styledComponents: true,
