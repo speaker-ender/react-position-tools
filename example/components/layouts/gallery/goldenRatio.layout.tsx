@@ -15,13 +15,8 @@ import Grid from "../../grid";
 // |               Footer                  |
 // |_______________________________________|
 
-
 const GoldenRatioLayout: React.FC = (props) => {
-
-    return (
-        <Grid>
-        </Grid>
-    )
-}
+  return <Grid></Grid>;
+};
 
 export default GoldenRatioLayout;

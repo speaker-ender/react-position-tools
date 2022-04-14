@@ -1,59 +1,60 @@
 {
-    "name": "@speaker-ender/react-position-tools",
-    "author": "3nder",
-    "description": "React Position Tools For HTML Elements",
-    "version": "v0.1.12",
-    "main": "dist/index.cjs.js",
-    "module": "dist/index.esm.js",
-    "types": "dist/index.d.ts",
-    "files": [
-        "dist"
-    ],
-    "dependencies": {
-        "@speaker-ender/js-measure": "0.2.2",
-        "@speaker-ender/react-scrollr": "^0.1.9",
-        "@speaker-ender/react-ssr-tools": "^0.1.4",
-        "throttle-debounce": "^3.0.1"
-    },
-    "devDependencies": {
-        "@types/node": "^17.0.23",
-        "@types/react": "^17.0.43",
-        "@types/react-dom": "^17.0.14",
-        "@types/throttle-debounce": "^2.1.0",
-        "esbuild": "^0.14.30",
-        "esbuild-node-externals": "^1.4.1",
-        "ts-node": "^10.7.0",
-        "typescript": "^4.6.3"
-    },
-    "peerDependencies": {
-        "react": ">= 17.0.0",
-        "react-dom": ">= 17.0.0"
-    },
-    "keywords": [
-        "react",
-        "positions"
-    ],
-    "license": "MIT",
-    "scripts": {
-        "build:package": "npm run build:esbuild && npm run build:types",
-        "build:esbuild": "node build.mjs",
-        "build:types": "tsc --project tsconfig.build.json",
-        "clean NPM": "npm ci",
-        "install NPM": "npm install",
-        "dev": "npm run dev -w example",
-        "build": "npm run build -w example",
-        "start": "npm run start -w example",
-        "postpublish": "npm run publish-npm",
-        "publish-npm": "npm publish --access public --ignore-scripts --@speaker-ender:registry='https://registry.npmjs.org'"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/speaker-ender/React-Position-Tools"
-    },
-    "bugs": {
-        "url": "https://github.com/speaker-ender/React-Position-Tools/issues"
-    },
-    "workspaces": [
-        "example"
-    ]
+  "name": "@speaker-ender/react-position-tools",
+  "author": "3nder",
+  "description": "React Position Tools For HTML Elements",
+  "version": "v0.1.13",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@speaker-ender/js-measure": "0.2.2",
+    "@speaker-ender/react-scrollr": "^0.1.10",
+    "@speaker-ender/react-ssr-tools": "^0.1.4",
+    "throttle-debounce": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.24",
+    "@types/react": "^18.0.5",
+    "@types/react-dom": "^18.0.1",
+    "@types/throttle-debounce": "^4.0.0",
+    "esbuild": "^0.14.36",
+    "esbuild-node-externals": "^1.4.1",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  },
+  "peerDependencies": {
+    "react": ">= 17.0.0",
+    "react-dom": ">= 17.0.0"
+  },
+  "keywords": [
+    "react",
+    "positions"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build:package": "npm run build:esbuild && npm run build:types",
+    "build:esbuild": "node build.mjs",
+    "build:types": "tsc --project tsconfig.build.json",
+    "clean NPM": "npm ci",
+    "install NPM": "npm install",
+    "dev": "npm run dev -w example",
+    "build": "npm run build -w example",
+    "start": "npm run start -w example",
+    "postpublish": "npm run publish-npm",
+    "publish-npm": "npm publish --access public --ignore-scripts --@speaker-ender:registry='https://registry.npmjs.org'",
+    "formatAll": "npx prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/speaker-ender/React-Position-Tools"
+  },
+  "bugs": {
+    "url": "https://github.com/speaker-ender/React-Position-Tools/issues"
+  },
+  "workspaces": [
+    "example"
+  ]
 }

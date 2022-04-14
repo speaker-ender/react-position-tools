@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 
 interface IUseToggleProps {
-    initialState?: boolean;
+  initialState?: boolean;
 }
 
 export const useToggle = (props: IUseToggleProps) => {
-    const [isToggled, setIsToggled] = useState(props.initialState);
+  const [isToggled, setIsToggled] = useState(props.initialState);
 
-    const updateToggled = useCallback(() => {
-        setIsToggled(!isToggled);
-    }, [setIsToggled, isToggled]);
+  const updateToggled = useCallback(() => {
+    setIsToggled(!isToggled);
+  }, [setIsToggled, isToggled]);
 
-    return { isToggled, updateToggled };
-}
+  return { isToggled, updateToggled };
+};

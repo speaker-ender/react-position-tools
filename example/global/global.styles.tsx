@@ -8,11 +8,18 @@ export const GlobalStyle = createGlobalStyle`
   body {
     ${spacingProps}
 
-    ${props => !!props.theme.themeStyle ? props.theme.themeStyle === 'dark' ? darkThemeProps : lightThemeProps : ''};
+    ${(props) =>
+      !!props.theme.themeStyle
+        ? props.theme.themeStyle === "dark"
+          ? darkThemeProps
+          : lightThemeProps
+        : ""};
 
     margin: 0;
-    background: ${p => p.theme.themeProps.background};
-    transition: background-color ${transition.appear}, color ${transition.appearSecondary};
+    background: ${(p) => p.theme.themeProps.background};
+    transition: background-color ${transition.appear}, color ${
+  transition.appearSecondary
+};
     font-size: 12px;
 
     @media ${media.tablet} {
@@ -37,4 +44,4 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     overflow: hidden;
   }
-`
+`;

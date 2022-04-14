@@ -15,13 +15,8 @@ import Grid from "../../grid";
 // |               Footer                  |
 // |_______________________________________|
 
-
 const GalleryLayout: React.FC = (props) => {
-
-    return (
-        <Grid>
-        </Grid>
-    )
-}
+  return <Grid></Grid>;
+};
 
 export default GalleryLayout;

@@ -1,30 +1,36 @@
-import esbuild from 'esbuild';
-import { nodeExternalsPlugin } from 'esbuild-node-externals';
+import esbuild from "esbuild";
+import { nodeExternalsPlugin } from "esbuild-node-externals";
 
 const entryFile = "src/index.ts";
 const sharedBuildProps = {
-    bundle: true,
-    entryPoints: [entryFile],
-    logLevel: "info",
-    minify: true,
-    sourcemap: true,
-    plugins: [nodeExternalsPlugin()],
+  bundle: true,
+  entryPoints: [entryFile],
+  logLevel: "info",
+  minify: true,
+  sourcemap: true,
+  plugins: [nodeExternalsPlugin()],
 };
 
 // ESM
-esbuild.build({
+esbuild
+  .build({
     ...sharedBuildProps,
-    format: 'esm',
-    outfile: './dist/index.esm.js',
-    target: ['esnext'],
-    loader: { ".ts": "ts", ".tsx": "tsx" }
-}).then(() => console.log("⚡ ESM Done")).catch(() => process.exit(1));
+    format: "esm",
+    outfile: "./dist/index.esm.js",
+    target: ["esnext"],
+    loader: { ".ts": "ts", ".tsx": "tsx" },
+  })
+  .then(() => console.log("⚡ ESM Done"))
+  .catch(() => process.exit(1));
 
 // CJS
-esbuild.build({
+esbuild
+  .build({
     ...sharedBuildProps,
-    format: 'cjs',
-    outfile: './dist/index.cjs.js',
-    target: ['esnext'],
+    format: "cjs",
+    outfile: "./dist/index.cjs.js",
+    target: ["esnext"],
     loader: { ".ts": "ts", ".tsx": "tsx" },
-}).then(() => console.log("⚡ CJS Done")).catch(() => process.exit(1));
+  })
+  .then(() => console.log("⚡ CJS Done"))
+  .catch(() => process.exit(1));

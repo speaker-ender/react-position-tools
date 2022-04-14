@@ -1,2 +1,1 @@
-
-export interface ILayoutProps { }
+export interface ILayoutProps {}

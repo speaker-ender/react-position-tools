@@ -4,7 +4,7 @@ import { theme } from "../../global/theme.styles";
 import { StyledContentItem } from "../layouts/content/contentItem.styles";
 
 export const StyledDivider = styled(StyledContentItem)`
-    ${InvertContentBackgroundStyles}
-    width: 100%;
-    height: 2px;
-`
+  ${InvertContentBackgroundStyles}
+  width: 100%;
+  height: 2px;
+`;

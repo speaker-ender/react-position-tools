@@ -6,34 +6,34 @@ import { OPACITY } from "../../global/variables/opacity";
 import { InterfaceBackgroundStyles } from "../../global/background.styles";
 
 interface IStyledAlert {
-    active: boolean;
+  active: boolean;
 }
 
 export const StyledAlert = styled.div<IStyledAlert>`
-    ${PanelStyles}
-    ${InterfaceBackgroundStyles}
+  ${PanelStyles}
+  ${InterfaceBackgroundStyles}
     top: 50vh;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: auto;
-    max-height: 100vh;
-    max-width: 80vw;
-    overflow-y: scroll;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: ${p => p.active ? OPACITY.none : OPACITY.full};
-    pointer-events: ${p => p.active ? 'all' : 'none'};
-    transform: translate3d(0, -50%, 0);
-    z-index: ${LAYERS.alert};
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  max-height: 100vh;
+  max-width: 80vw;
+  overflow-y: scroll;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: ${(p) => (p.active ? OPACITY.none : OPACITY.full)};
+  pointer-events: ${(p) => (p.active ? "all" : "none")};
+  transform: translate3d(0, -50%, 0);
+  z-index: ${LAYERS.alert};
 `;
 
 export const StyledAlertTitle = styled.div`
-    ${Header2Style}
-    color: ${p => p.theme.themeProps.text};
-    user-select: none;
+  ${Header2Style}
+  color: ${(p) => p.theme.themeProps.text};
+  user-select: none;
 `;
 
 export const StyledAlertText = styled(Paragraph)`
-    color: ${p => p.theme.themeProps.text};
+  color: ${(p) => p.theme.themeProps.text};
 `;

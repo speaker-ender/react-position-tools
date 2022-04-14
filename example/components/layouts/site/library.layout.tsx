@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ReactNode } from "react";
 import { ILayoutProps } from "..";
 import PageTransition from "../../../global/pageTransition";
 import { useSiteState } from "../../../hooks/useSiteState";
@@ -36,25 +37,23 @@ import { StyledLibrary } from "./library.layout.styles";
 // |__________|
 // |___Footer_|
 
-
-export interface ILibraryLayout extends ILayoutProps { }
-
-
-const LibraryLayout: React.FC<ILayoutProps> = ({ children }) => {
-    const { overlayActive } = useSiteState();
-
-    return (
-        <StyledLibrary>
-            <Header />
-            <Navigation sidebarStyle={true} />
-            <PageTransition>
-                <ContentLayout>
-                    {children}
-                </ContentLayout>
-            </PageTransition>
-            <Footer />
-        </StyledLibrary>
-    )
+export interface ILibraryLayout extends ILayoutProps {
+  children?: ReactNode;
 }
+
+const LibraryLayout: React.FC<ILibraryLayout> = ({ children }) => {
+  const { overlayActive } = useSiteState();
+
+  return (
+    <StyledLibrary>
+      <Header />
+      <Navigation sidebarStyle={true} />
+      <PageTransition>
+        <ContentLayout>{children}</ContentLayout>
+      </PageTransition>
+      <Footer />
+    </StyledLibrary>
+  );
+};
 
 export default LibraryLayout;

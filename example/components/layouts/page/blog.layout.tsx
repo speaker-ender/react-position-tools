@@ -15,13 +15,8 @@ import Grid from "../../grid";
 // |               Footer                  |
 // |_______________________________________|
 
-
 const BlogPageLayout: React.FC = (props) => {
-
-    return (
-        <Grid>
-        </Grid>
-    )
-}
+  return <Grid></Grid>;
+};
 
 export default BlogPageLayout;

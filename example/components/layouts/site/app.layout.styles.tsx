@@ -5,37 +5,36 @@ import { StyledHeader } from "../../interface/header.styles";
 import { StyledNavigation } from "../../interface/navigation.styles";
 import { StyledContentLayout } from "../page/content.layout.styles";
 
-
-interface IStyledAppLayout {
-}
+interface IStyledAppLayout {}
 
 export const StyledAppLayout = styled.div<IStyledAppLayout>`
-    display: grid;
-    margin-left: auto;
-    margin-right: auto;
-    min-height: 100vh;
-    grid: "header"
-        "navigation"
-        "content"
-        "footer";
-    grid-template-columns: 1fr; 
-    grid-template-rows: min-content min-content 1fr min-content;
-    align-content: center;
-    grid-auto-flow: dense;
+  display: grid;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 100vh;
+  grid:
+    "header"
+    "navigation"
+    "content"
+    "footer";
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content min-content 1fr min-content;
+  align-content: center;
+  grid-auto-flow: dense;
 
-    & ${StyledHeader} {
-        grid-area: header;
-    }
+  & ${StyledHeader} {
+    grid-area: header;
+  }
 
-    & ${StyledNavigation} {
-        grid-area: navigation;
-    }
+  & ${StyledNavigation} {
+    grid-area: navigation;
+  }
 
-    & ${StyledContentLayout} {
-        grid-area: content;
-    }
+  & ${StyledContentLayout} {
+    grid-area: content;
+  }
 
-    & ${StyledFooter} {
-        grid-area: footer;
-    }
+  & ${StyledFooter} {
+    grid-area: footer;
+  }
 `;

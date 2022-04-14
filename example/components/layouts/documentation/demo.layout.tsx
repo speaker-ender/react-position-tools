@@ -15,13 +15,8 @@ import Grid from "../../grid";
 // |               Footer                  |
 // |_______________________________________|
 
-
 const DemoLayout: React.FC = (props) => {
-
-    return (
-        <Grid>
-        </Grid>
-    )
-}
+  return <Grid></Grid>;
+};
 
 export default DemoLayout;

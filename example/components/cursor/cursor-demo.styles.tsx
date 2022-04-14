@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import { StyledImageGrid } from "../content/imageGrid.styles";
 
-interface IStyledCursorImage {
-
-}
+interface IStyledCursorImage {}
 
 export const StyledCursorContainer = styled.div<IStyledCursorImage>`
-    & ${StyledImageGrid} {
-        min-height: 50vh;
-    }
+  & ${StyledImageGrid} {
+    min-height: 50vh;
+  }
 `;

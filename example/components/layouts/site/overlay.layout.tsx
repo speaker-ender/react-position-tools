@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ReactNode } from "react";
 import { ILayoutProps } from "..";
 import { StyledOverlayLayout } from "./overlay.layout.styles";
 
@@ -31,17 +32,19 @@ import { StyledOverlayLayout } from "./overlay.layout.styles";
 // |___Footer_|
 
 export interface IOverlayLayout extends ILayoutProps {
-    sidebarStyle?: boolean;
+  sidebarStyle?: boolean;
+  children?: ReactNode;
 }
 
-
-const OverlayLayout: React.FC<IOverlayLayout> = ({ children, sidebarStyle }) => {
-
-    return (
-        <StyledOverlayLayout sidebarStyle={sidebarStyle}>
-            {children}
-        </StyledOverlayLayout>
-    )
-}
+const OverlayLayout: React.FC<IOverlayLayout> = ({
+  children,
+  sidebarStyle,
+}) => {
+  return (
+    <StyledOverlayLayout sidebarStyle={sidebarStyle}>
+      {children}
+    </StyledOverlayLayout>
+  );
+};
 
 export default OverlayLayout;

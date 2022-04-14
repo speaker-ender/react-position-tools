@@ -1,20 +1,18 @@
-import * as React from "react"
+import * as React from "react";
+import { ReactNode } from "react";
 import { useSiteState } from "../hooks/useSiteState";
 import { StyledOverlay } from "./overlay.styles";
 
 export interface IAlert {
-    title?: string;
-    children?: React.ReactChild[] | React.ReactElement;
-    text?: string;
+  title?: string;
+  children?: ReactNode;
+  text?: string;
 }
 
 const Overlay: React.FC<IAlert> = (props) => {
-    const { overlayActive } = useSiteState();
+  const { overlayActive } = useSiteState();
 
-    return (
-        <StyledOverlay isActive={!!overlayActive}>
-        </StyledOverlay>
-    )
-}
+  return <StyledOverlay isActive={!!overlayActive}></StyledOverlay>;
+};
 
-export default Overlay
+export default Overlay;
