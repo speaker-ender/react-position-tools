@@ -2,7 +2,7 @@
   "name": "@speaker-ender/react-position-tools",
   "author": "3nder",
   "description": "React Position Tools For HTML Elements",
-  "version": "v0.1.13",
+  "version": "v0.2.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -10,20 +10,20 @@
     "dist"
   ],
   "dependencies": {
-    "@speaker-ender/js-measure": "0.2.2",
-    "@speaker-ender/react-scrollr": "^0.1.10",
+    "@speaker-ender/js-measure": "0.3.1",
+    "@speaker-ender/react-scrollr": "^0.2.2",
     "@speaker-ender/react-ssr-tools": "^0.1.4",
-    "throttle-debounce": "^4.0.0"
+    "throttle-debounce": "^4.0.1"
   },
   "devDependencies": {
-    "@types/node": "^17.0.24",
+    "@types/node": "^17.0.31",
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
     "@types/throttle-debounce": "^4.0.0",
-    "esbuild": "^0.14.36",
+    "esbuild": "^0.14.38",
     "esbuild-node-externals": "^1.4.1",
     "ts-node": "^10.7.0",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.4"
   },
   "peerDependencies": {
     "react": ">= 17.0.0",
