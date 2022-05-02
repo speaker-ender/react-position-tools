@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  MutableRefObject,
   ReactNode,
   useCallback,
   useEffect,
@@ -45,7 +46,12 @@ export type ResizeCallback = (height: number, width: number) => void;
 export const useWindowState = ({
   stateInterval,
   listenerInterval,
-}: IWindowOptions) => {
+}: IWindowOptions): [
+  registerCursorCallback: (callback: ResizeCallback) => void,
+  unregisterCursorCallback: (callback: ResizeCallback) => void,
+  windowDimensions: MutableRefObject<IWindowDimensions>,
+  $html: MutableRefObject<HTMLElement | null>
+] => {
   const isClientSide = useClientHook();
   const $html = React.useRef<HTMLElement | null>(null);
   const windowDimensions = useRef<IWindowDimensions>(selectWindowDimensions());
@@ -76,12 +82,12 @@ export const useWindowState = ({
     $html.current = document.documentElement;
   }, [isClientSide]);
 
-  return {
-    $html,
-    windowDimensions,
+  return [
     registerResizeCallback,
     unregisterResizeCallback,
-  };
+    windowDimensions,
+    $html,
+  ];
 };
 
 export const useWindowContext = () => {

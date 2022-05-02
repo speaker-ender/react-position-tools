@@ -69,7 +69,7 @@ export const useElementTracking = (
 ] => {
   const interval = props?.updateInterval || UPDATE_INTERVAL;
   const isClientSide = useClientHook();
-  const { viewportDimensions } = useViewportContext();
+  const [ viewportDimensions ] = useViewportContext();
 
   const scrollDependantAttributes = props?.trackedProperties
     ? defaultScrollDependantAttributes.filter((attribute) =>
@@ -82,7 +82,7 @@ export const useElementTracking = (
       )
     : defaultResizeDependantAttributes;
 
-  const { registerResizeCallback, unregisterResizeCallback } =
+  const [ registerResizeCallback, unregisterResizeCallback ] =
     useWindowContext();
   const [scrollRef, registerScrollCallback, unregisterScrollCallback] =
     useScrollContext();

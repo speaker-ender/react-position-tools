@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  MutableRefObject,
   ReactNode,
   useCallback,
   useEffect,
@@ -39,13 +40,18 @@ const selectViewportDimensions = (
 
 export type ResizeCallback = (height: number, width: number) => void;
 
-export const useViewportState = (fakeRef: HTMLDivElement | null) => {
+export const useViewportState = (
+  fakeRef: HTMLDivElement | null
+): [
+  viewportDimensions: MutableRefObject<IViewportDimensions>,
+  registerViewportCallback: (callback: ResizeCallback) => void,
+  unregisterViewportCallback: (callback: ResizeCallback) => void
+] => {
   const isClientSide = useClientHook();
   const viewportDimensions = useRef<IViewportDimensions>(
     fakeRef ? selectViewportDimensions(fakeRef) : { height: 0, width: 0 }
   );
-  const { registerResizeCallback, unregisterResizeCallback } =
-    useWindowContext();
+  const [registerResizeCallback, unregisterResizeCallback] = useWindowContext();
   const [
     registerViewportCallback,
     unregisterViewportCallback,
@@ -93,11 +99,11 @@ export const useViewportState = (fakeRef: HTMLDivElement | null) => {
     unregisterResizeCallback,
   ]);
 
-  return {
+  return [
     viewportDimensions,
     registerViewportCallback,
     unregisterViewportCallback,
-  };
+  ];
 };
 
 export const useViewportContext = () => {
