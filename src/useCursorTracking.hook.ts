@@ -23,7 +23,7 @@ export type CursorTrackingCallback = (
 export const useCursorTracking = (): [
   registerCursorCallback: (callback: CursorTrackingCallback) => void,
   unregisterCursorCallback: (callback: CursorTrackingCallback) => void,
-  refCallback: (element: HTMLElement) => void,
+  refCallback: (element: HTMLElement | null) => void,
   elementState: MutableRefObject<Partial<IElementState>>
 ] => {
   const isClientSide = useClientHook();

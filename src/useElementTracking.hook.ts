@@ -65,7 +65,7 @@ export const useElementTracking = (
   elementState: MutableRefObject<Partial<IElementState>>,
   registerScrollCallback: (callback: TrackedElementCallback) => void,
   unregisterScrollCallback: (callback: TrackedElementCallback) => void,
-  refCallback: (element: HTMLElement) => void
+  refCallback: (element: HTMLElement | null) => void
 ] => {
   const interval = props?.updateInterval || UPDATE_INTERVAL;
   const isClientSide = useClientHook();

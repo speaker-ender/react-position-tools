@@ -2,7 +2,7 @@
   "name": "@speaker-ender/react-position-tools",
   "author": "3nder",
   "description": "React Position Tools For HTML Elements",
-  "version": "v0.2.1",
+  "version": "v0.2.2",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",

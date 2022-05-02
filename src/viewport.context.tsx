@@ -6,9 +6,9 @@ import React, {
   useRef,
 } from "react";
 import { useClientHook } from "@speaker-ender/react-ssr-tools";
-import { useWindowContext } from "@speaker-ender/react-position-tools";
 import { rawHeight, rawWidth } from "@speaker-ender/js-measure";
 import { useRegisteredCallbacks } from "./helpers/hooks";
+import { useWindowContext } from "./window.context";
 
 export type IWindowOptions = {
   stateInterval: number;
