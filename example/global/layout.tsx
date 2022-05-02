@@ -16,10 +16,12 @@ import {
 } from "../components/interface/notificationTray.styles";
 import { useClientHook } from "@speaker-ender/react-ssr-tools";
 import WindowInfo from "../components/window/windowInfo";
-import { ScrollContextProvider } from "@speaker-ender/react-scrollr";
+
 import {
   CursorContextProvider,
+  ViewportContextProvider,
   WindowContextProvider,
+  ScrollContextProvider,
 } from "@speaker-ender/react-position-tools";
 import { ReactNode } from "react";
 
@@ -164,19 +166,21 @@ const Layout: React.FC<ILayout> = ({ children }) => {
         </Head>
         <ScrollContextProvider>
           <WindowContextProvider>
-            <CursorContextProvider>
-              <main>
-                <LibraryLayout>{children}</LibraryLayout>
-              </main>
-              <OverlayLayout sidebarStyle={true}>
-                <DebugPanel>
-                  <WindowInfo />
-                </DebugPanel>
-                <DynamicNotificationTray />
-                <DynamicBannerMessage />
-                <Overlay />
-              </OverlayLayout>
-            </CursorContextProvider>
+            <ViewportContextProvider>
+              <CursorContextProvider>
+                <main>
+                  <LibraryLayout>{children}</LibraryLayout>
+                </main>
+                <OverlayLayout sidebarStyle={true}>
+                  <DebugPanel>
+                    <WindowInfo />
+                  </DebugPanel>
+                  <DynamicNotificationTray />
+                  <DynamicBannerMessage />
+                  <Overlay />
+                </OverlayLayout>
+              </CursorContextProvider>
+            </ViewportContextProvider>
           </WindowContextProvider>
         </ScrollContextProvider>
       </ThemeProvider>

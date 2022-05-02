@@ -104,7 +104,7 @@ export const useViewportContext = () => {
   const viewportContext = React.useContext(ViewportContext);
 
   if (!viewportContext) {
-    throw new Error("WindowContext used outside of WindowContext.Provider");
+    throw new Error("ViewportContext used outside of ViewportContext.Provider");
   }
 
   return viewportContext;

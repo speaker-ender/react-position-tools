@@ -1,9 +1,6 @@
 import * as React from "react";
 import ImageComponent from "../content/image";
-import {
-  useCursorTracking,
-  useIsCursorActive,
-} from "@speaker-ender/react-position-tools";
+import { useCursorTracking } from "@speaker-ender/react-position-tools";
 import {
   MutableRefObject,
   useCallback,
@@ -17,6 +14,9 @@ import {
 } from "./cursorParalax.styles";
 import { IPos } from "@speaker-ender/react-position-tools/dist/cursor.context";
 import { Paragraph } from "../../global/typography";
+import { ICursorTrackingState } from "@speaker-ender/react-position-tools/dist/useCursorTracking.hook";
+import { useClientHook } from "@speaker-ender/react-ssr-tools";
+import ParagraphComponent from "../content/paragraph";
 
 interface ICursorParalax {
   style?: React.CSSProperties;
@@ -25,33 +25,26 @@ interface ICursorParalax {
 }
 
 const CursorParalax: React.FC<ICursorParalax> = (props) => {
-  const { pixels, percent, refCallback } = useCursorTracking();
-  const isActive = useIsCursorActive();
-  const [isHover, setIsHover] = useState(false);
-  const imageWrapperRef = useRef() as MutableRefObject<HTMLDivElement>;
+  const isClient = useClientHook();
+  const [
+    registerCursorTrackingCallback,
+    unregisterCursorTrackingCallback,
+    refCallback,
+  ] = useCursorTracking();
+  const parallaxRef = useRef<HTMLDivElement | null>(null);
+  const imageRef = useRef<HTMLElement | null>(null);
+  const paragraphRef = useRef<HTMLElement | null>(null);
 
-  const getIsHover = React.useCallback(() => {
-    return !(!percent.x || !percent.y || percent.x == 100 || percent.y == 100);
-  }, [percent.x, percent.y, pixels.x, pixels.y]);
+  const isHover = useCallback((percent: IPos) => {
+    const newIsHover = !(
+      !percent.x ||
+      !percent.y ||
+      percent.x == 100 ||
+      percent.y == 100
+    );
 
-  const updateIsHover = useCallback(() => {
-    const newIsHover = getIsHover();
-    if (newIsHover !== isHover) {
-      setIsHover(newIsHover);
-    }
-  }, [isHover, setIsHover, getIsHover]);
-
-  useEffect(() => {
-    updateIsHover();
-
-    return () => {};
-  }, [percent.x, percent.y, updateIsHover]);
-
-  useEffect(() => {
-    isHover && props.positionCallback(pixels, percent);
-
-    return () => {};
-  }, [isHover, pixels, percent]);
+    return newIsHover;
+  }, []);
 
   const getDecimalPercent = (percentValue: number) => {
     return percentValue / 100;
@@ -65,43 +58,74 @@ const CursorParalax: React.FC<ICursorParalax> = (props) => {
     return getDecimalPercent(percentValue) * -2 + 1;
   };
 
+  const cursorCallback = useCallback(
+    (state: ICursorTrackingState) => {
+      const isHovering = isHover(state.percent);
+      if (parallaxRef.current) {
+        parallaxRef.current.style.transform = isHover(state.percent)
+          ? `rotateY(${getOffsetXPercent(state.percent.x) * 8}deg) rotateX(${
+              getOffsetYPercent(state.percent.y) * 8
+            }deg) translate3d( 0, -2px, 0 )`
+          : "rotateY(0deg) rotateX(0deg)";
+      }
+      if (imageRef.current) {
+        imageRef.current.style.transform = isHover(state.percent)
+          ? `scale(0.9)`
+          : `scale(0.8)`;
+        imageRef.current.style.backgroundPosition = isHover(state.percent)
+          ? `${(state.percent.x / 1.5 + 25).toPrecision(3)}% ${(
+              state.percent.y / 1.5 +
+              25
+            ).toPrecision(3)}%`
+          : "";
+      }
+      if (paragraphRef.current) {
+        paragraphRef.current.style.transform = isHover(state.percent)
+          ? `rotateY(${getOffsetXPercent(state.percent.x) * 5}deg) rotateX(${
+              getOffsetYPercent(state.percent.y) * 5
+            }deg) translate3d(-50%, -100%, 150px )`
+          : "translate3d(-50%, -100%, 150px ) rotateY(0deg) rotateX(0deg)";
+      }
+    },
+    [isHover]
+  );
+
+  const parallaxRefCallback = useCallback(
+    (element: HTMLDivElement) => {
+      parallaxRef.current = element;
+      refCallback(element);
+    },
+    [refCallback, parallaxRef]
+  );
+
+  useEffect(() => {
+    if (isClient) {
+      registerCursorTrackingCallback(cursorCallback);
+    }
+
+    return () => unregisterCursorTrackingCallback(cursorCallback);
+  }, [
+    cursorCallback,
+    isClient,
+    registerCursorTrackingCallback,
+    unregisterCursorTrackingCallback,
+  ]);
+
   return (
     <StyledCursorParalaxWrapper wireframe={props.wireframe}>
       <StyledCursorParalax
         wireframe={props.wireframe}
-        isHover={isHover}
-        style={{
-          transform: isHover
-            ? `rotateY(${getOffsetXPercent(percent.x) * 8}deg) rotateX(${
-                getOffsetYPercent(percent.y) * 8
-              }deg) translate3d( 0, -2px, 0 )`
-            : "rotateY(0deg) rotateX(0deg)",
-        }}
-        ref={refCallback}
+        ref={parallaxRefCallback}
       >
         <ImageComponent
-          style={{
-            backgroundPosition: isHover
-              ? `${(percent.x / 1.5 + 25).toPrecision(3)}% ${(
-                  percent.y / 1.5 +
-                  25
-                ).toPrecision(3)}%`
-              : "",
-            transform: isHover ? `scale(0.9)` : `scale(0.8)`,
-          }}
           coloredBackground={true}
+          refCallback={(element) => (imageRef.current = element)}
         />
-        <Paragraph
-          style={{
-            transform: isHover
-              ? `rotateY(${getOffsetXPercent(percent.x) * 5}deg) rotateX(${
-                  getOffsetYPercent(percent.y) * 5
-                }deg) translate3d(-50%, -100%, 150px )`
-              : "translate3d(-50%, -100%, 150px ) rotateY(0deg) rotateX(0deg)",
-          }}
+        <ParagraphComponent
+          refCallback={(element) => (paragraphRef.current = element)}
         >
           Text
-        </Paragraph>
+        </ParagraphComponent>
       </StyledCursorParalax>
     </StyledCursorParalaxWrapper>
   );

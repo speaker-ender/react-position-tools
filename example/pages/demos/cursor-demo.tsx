@@ -2,10 +2,7 @@ import type { NextPage } from "next";
 import { StyledPanel } from "../../global/panel.styles";
 import { Header2, Header4, Header5, Paragraph } from "../../global/typography";
 import { StyledPage } from "../../global/page.styles";
-import {
-  useIsCursorActive,
-  useCursorContext,
-} from "@speaker-ender/react-position-tools";
+import { useCursorContext } from "@speaker-ender/react-position-tools";
 import DebugPanel from "../../components/interface/debugPanel";
 import { useCallback, useState } from "react";
 import { StyledCursorContainer } from "../../components/cursor/cursor-demo.styles";
@@ -15,8 +12,7 @@ import { IPos } from "@speaker-ender/react-position-tools/dist/cursor.context";
 import { ICursorTrackingState } from "@speaker-ender/react-position-tools/dist/useCursorTracking.hook";
 
 const CursorDemo: NextPage = () => {
-  const { cursorPosition } = useCursorContext();
-  const isActive = useIsCursorActive();
+  const [cursorPosition] = useCursorContext();
   const [activeCursorPosition, setActiveCursorPosition] =
     useState<ICursorTrackingState>(null!);
 
@@ -88,8 +84,12 @@ const CursorDemo: NextPage = () => {
           activeCursorPosition && activeCursorPosition.pixels.y
         }px`}</Paragraph>
         <Header5>Relative To Viewport</Header5>
-        <Paragraph>{`x: ${cursorPosition?.currentPosition?.x}px`}</Paragraph>
-        <Paragraph>{`y: ${cursorPosition?.currentPosition?.y}px`}</Paragraph>
+        <Paragraph>{`x: ${
+          cursorPosition.current && cursorPosition.current.currentPosition?.x
+        }px`}</Paragraph>
+        <Paragraph>{`y: ${
+          cursorPosition.current && cursorPosition.current.currentPosition?.y
+        }px`}</Paragraph>
       </DebugPanel>
     </StyledPage>
   );
