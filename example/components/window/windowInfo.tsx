@@ -5,7 +5,7 @@ import { Header4 } from "../../global/typography";
 import ParagraphComponent from "../content/paragraph";
 
 const WindowInfo: React.FC = (props) => {
-  const { registerResizeCallback, unregisterResizeCallback, windowDimensions } =
+  const [registerResizeCallback, unregisterResizeCallback, windowDimensions] =
     useWindowContext();
   const [windowState, setWindowState] = useState<IWindowDimensions>();
 
