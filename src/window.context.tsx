@@ -47,8 +47,8 @@ export const useWindowState = ({
   stateInterval,
   listenerInterval,
 }: IWindowOptions): [
-  registerCursorCallback: (callback: ResizeCallback) => void,
-  unregisterCursorCallback: (callback: ResizeCallback) => void,
+  registerResizeCallback: (callback: ResizeCallback) => void,
+  unregisterResizeCallback: (callback: ResizeCallback) => void,
   windowDimensions: MutableRefObject<IWindowDimensions>,
   $html: MutableRefObject<HTMLElement | null>
 ] => {
