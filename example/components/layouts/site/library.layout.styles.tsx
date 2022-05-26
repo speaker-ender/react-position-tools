@@ -21,7 +21,7 @@ export const StyledLibrary = styled.div<IStyledLibrary>`
   align-content: center;
   grid-auto-flow: dense;
 
-  @media ${media.tablet} {
+  @media ${media.tabletLandscape} {
     grid:
       "header header"
       "navigation content"

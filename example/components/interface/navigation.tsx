@@ -5,8 +5,11 @@ import { useSiteState } from "../../hooks/useSiteState";
 import Drawer from "../content/drawer";
 import { RawInvertTheme } from "../invertTheme";
 import {
+  StyledNavGithub,
+  StyledNavGithubLink,
   StyledNavigation,
   StyledNavigationContent,
+  StyledNavigationContentWrapper,
   StyledNavigationFooter,
   StyledNavigationHeader,
   StyledNavigationLink,
@@ -15,6 +18,10 @@ import {
 const DynamicInvertTheme = dynamic(() => import("../invertTheme"), {
   ssr: false,
   loading: () => <RawInvertTheme />,
+});
+
+const DynamicGithub = dynamic(() => import("../../assets/github.svg"), {
+  ssr: false,
 });
 
 interface INavigation {
@@ -27,7 +34,7 @@ const Navigation: React.FC<INavigation> = (props) => {
   return (
     <StyledNavigation sidebarStyle={props.sidebarStyle} open={navOpen}>
       <StyledNavigationContent sidebarStyle={props.sidebarStyle} open={navOpen}>
-        <div>
+        <StyledNavigationContentWrapper>
           <StyledNavigationHeader>Components</StyledNavigationHeader>
           <StyledNavigationLink>
             <Link href={"/components/cursorContextProvider"}>
@@ -66,9 +73,17 @@ const Navigation: React.FC<INavigation> = (props) => {
               <Link href={"/demos/tracked-element-demo"}>Tracked Element</Link>
             </StyledNavigationLink>
           </Drawer>
-        </div>
+        </StyledNavigationContentWrapper>
         <StyledNavigationFooter sidebarStyle={props.sidebarStyle}>
           <DynamicInvertTheme />
+          <StyledNavGithub>
+            <DynamicGithub />
+            <StyledNavGithubLink
+              href={"https://github.com/speaker-ender/react-position-tools"}
+              target="_blank"
+              rel="noreferrer"
+            />
+          </StyledNavGithub>
         </StyledNavigationFooter>
       </StyledNavigationContent>
     </StyledNavigation>

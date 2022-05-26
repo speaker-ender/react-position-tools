@@ -10,7 +10,9 @@ const Footer: React.FC<IHeader> = (props) => {
     <StyledFooter>
       <StyledFooterContent>
         <StyledLink>
-          <Link href={"/"}>3NDER</Link>
+          <a href={"https://3nder.io"} target="_blank" rel="noreferrer">
+            3NDER
+          </a>
         </StyledLink>
         © {new Date().getFullYear()}
       </StyledFooterContent>

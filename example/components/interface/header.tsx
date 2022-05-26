@@ -2,9 +2,10 @@ import Link from "next/link";
 import * as React from "react";
 import { useSiteState } from "../../hooks/useSiteState";
 import {
+  StyledHam,
+  StyledHamPart,
   StyledHeader,
   StyledHeaderTitle,
-  StyledNavButton,
 } from "./header.styles";
 
 interface IHeader {}
@@ -27,11 +28,12 @@ const Header: React.FC<IHeader> = (props) => {
   return (
     <StyledHeader>
       <StyledHeaderTitle>
-        <Link href={"/"}>3NDER</Link>
+        <Link href={"/"}>R.PT</Link>
       </StyledHeaderTitle>
-      <StyledNavButton onClick={() => handleClick()}>
-        {navOpen || alert.active ? "❌" : "✙"}
-      </StyledNavButton>
+      <StyledHam isOpen={navOpen} onClick={() => handleClick()}>
+        <StyledHamPart />
+        <StyledHamPart />
+      </StyledHam>
     </StyledHeader>
   );
 };
