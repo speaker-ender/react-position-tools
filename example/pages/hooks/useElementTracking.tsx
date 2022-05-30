@@ -5,7 +5,11 @@ const useElementTrackingPage: NextPage = () => {
   return (
     <FunctionLayout
       functionName="useElementTracking"
-      description={[]}
+      description={[
+        "This hook is used to register callbacks whenever an element's DOM properties are changed.",
+        "You can pass an array of the properties that you would like to track to prevent unnecessary callbacks and calcuations",
+        "This hook must be used in a component that is a descendant of the WindowContextProvider, ViewportContextProvider, and ScrollContextProvider in order to function.",
+      ]}
       parameters={[
         {
           name: "trackedProperties",

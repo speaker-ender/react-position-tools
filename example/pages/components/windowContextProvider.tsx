@@ -5,7 +5,9 @@ const WindowContextProviderPage: NextPage = () => {
   return (
     <ComponentLayout
       componentName="WindowContextProvider"
-      description={[]}
+      description={[
+        "This component provides the context for the windows dimensions and the window object. It is used by the useWindowContext hook.",
+      ]}
       parameters={[
         {
           name: "listenerInterval",

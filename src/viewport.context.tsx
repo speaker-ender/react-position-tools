@@ -11,16 +11,11 @@ import { rawHeight, rawWidth } from "@speaker-ender/js-measure";
 import { useRegisteredCallbacks } from "./helpers/hooks";
 import { useWindowContext } from "./window.context";
 
-export type IWindowOptions = {
-  stateInterval: number;
-  listenerInterval: number;
-};
-
 export type IViewportState = Partial<ReturnType<typeof useViewportState>>;
 
 export const ViewportContext = createContext<IViewportState | null>(null);
 
-export interface IViewportContextProvider extends Partial<IWindowOptions> {
+export interface IViewportContextProvider {
   children?: ReactNode;
 }
 

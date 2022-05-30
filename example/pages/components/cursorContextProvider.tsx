@@ -5,19 +5,10 @@ const CursorContextProviderPage: NextPage = () => {
   return (
     <ComponentLayout
       componentName="CursorContextProvider"
-      description={[]}
-      parameters={[
-        {
-          name: "listenerInterval",
-          type: "number",
-          optional: true,
-        },
-        {
-          name: "stateInterval",
-          type: "number",
-          optional: true,
-        },
+      description={[
+        "This component provides the context for the cursors position on screen relative to the viewport and is used by the useCursorContext hook.",
       ]}
+      parameters={[]}
     />
   );
 };
