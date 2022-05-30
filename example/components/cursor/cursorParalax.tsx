@@ -21,7 +21,7 @@ import ParagraphComponent from "../content/paragraph";
 interface ICursorParalax {
   style?: React.CSSProperties;
   wireframe?: boolean;
-  positionCallback: (activePixels: IPos, activePercent: IPos) => void;
+  positionCallback?: (activePixels: IPos, activePercent: IPos) => void;
 }
 
 const CursorParalax: React.FC<ICursorParalax> = (props) => {
