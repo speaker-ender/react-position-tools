@@ -15,13 +15,13 @@ const Home: NextPage = () => {
       </StyledPanel>
       <Header3>Example Usage</Header3>
       <StyledPanel>
-        <ParagraphComponent text="Here you can see cursor tracking being used to animate a 'card' when moving a mouse cursor over it." />
+        <ParagraphComponent text="Here you can see the useCursorTracking hook being used to animate a card while moving a cursor over it." />
       </StyledPanel>
       <CursorParalax />
       <StyledPanel>
-        <ParagraphComponent text="While it is not required, it is recommended to use a library such as React-Spring to apply any animations you wish to apply from event callbacks." />
-        <ParagraphComponent text="Constantly writing to the DOM in React (and in general) can degrade performance of your site." />
-        <ParagraphComponent text="Simply using CSS transitions and Animations can also be costly if they are not written with care." />
+        <ParagraphComponent text="While not required, it is recommended to use a library such as React-Spring to apply any animations you wish to trigger from event callbacks." />
+        <ParagraphComponent text="Constantly writing to the DOM via React (or any other method) can degrade performance of your site." />
+        <ParagraphComponent text="Simply using CSS transitions and animations can also be costly if they are not written with care." />
       </StyledPanel>
     </StyledPage>
   );
