@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { StyledPanel } from "../global/panel.styles";
-import { Header2, Header3, Header4 } from "../global/typography";
+import { Header2, Header3 } from "../global/typography";
 import { StyledPage } from "../global/page.styles";
 
 const Custom404: NextPage = () => {

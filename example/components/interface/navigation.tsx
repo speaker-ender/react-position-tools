@@ -46,6 +46,11 @@ const Navigation: React.FC<INavigation> = (props) => {
               WindowContextProvider
             </Link>
           </StyledNavigationLink>
+          <StyledNavigationLink>
+            <Link href={"/components/viewportContextProvider"}>
+              ViewportContextProvider
+            </Link>
+          </StyledNavigationLink>
           <StyledNavigationHeader>Hooks</StyledNavigationHeader>
           <StyledNavigationLink>
             <Link href={"/hooks/useCursorContext"}>useCursorContext</Link>
@@ -57,10 +62,10 @@ const Navigation: React.FC<INavigation> = (props) => {
             <Link href={"/hooks/useElementTracking"}>useElementTracking</Link>
           </StyledNavigationLink>
           <StyledNavigationLink>
-            <Link href={"/hooks/useIsCursorActive"}>useIsCursorActive</Link>
+            <Link href={"/hooks/useWindowContext"}>useWindowContext</Link>
           </StyledNavigationLink>
           <StyledNavigationLink>
-            <Link href={"/hooks/useWindowContext"}>useWindowContext</Link>
+            <Link href={"/hooks/useViewportContext"}>useViewportContext</Link>
           </StyledNavigationLink>
           <Drawer title="Demos">
             <StyledNavigationLink>
